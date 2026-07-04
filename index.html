@@ -29,37 +29,38 @@
     </div>
   </div>
 
-  <!-- 网站设置 -->
-  <div class="settings-card">
-    <div class="form-group">
-      <label class="label">导航站名称</label>
-      <input class="input" id="siteTitle" placeholder="输入导航站名称" value="我的导航站">
+  <!-- 输入区（竖排：设置 + 链接输入；横屏：并排） -->
+  <div class="form-row">
+    <div class="settings-card">
+      <div class="form-group">
+        <label class="label">导航站名称</label>
+        <input class="input" id="siteTitle" placeholder="输入导航站名称" value="我的导航站">
+      </div>
+      <div class="form-group">
+        <label class="label">副标题（可选）</label>
+        <input class="input" id="siteSubtitle" placeholder="输入副标题" value="">
+      </div>
+      <div class="form-group">
+        <label class="label">背景主题</label>
+        <div class="theme-picker" id="themePicker"></div>
+      </div>
     </div>
-    <div class="form-group">
-      <label class="label">副标题（可选）</label>
-      <input class="input" id="siteSubtitle" placeholder="输入副标题" value="">
-    </div>
-    <div class="form-group">
-      <label class="label">背景主题</label>
-      <div class="theme-picker" id="themePicker"></div>
-    </div>
-  </div>
 
-  <!-- 链接输入区 -->
-  <div class="input-card">
-    <div class="card-header">
-      <span class="card-title">📋 粘贴你的链接</span>
-      <span class="card-hint">一行一个，或用逗号/换行分隔</span>
-    </div>
-    <textarea
-      class="link-input"
-      id="linkInput"
-      placeholder="在此粘贴链接，一行一个：&#10;示例1：只粘贴链接 https://github.com&#10;示例2：链接+中文名+分类 https://www.bilibili.com/ 哔哩哔哩（视频）&#10;示例3：链接+中文名 https://chat.deepseek.com DeepSeek AI助手"
-    ></textarea>
-    <div class="format-tip" id="formatTip">以上格式都可以 ✓ 输入后自动隐藏</div>
-    <div class="input-footer">
-      <span class="link-count" id="linkCount">0 个链接已解析</span>
-      <button class="btn-parse" id="parseBtn">开始生成</button>
+    <div class="input-card">
+      <div class="card-header">
+        <span class="card-title">📋 粘贴你的链接</span>
+        <span class="card-hint">一行一个，或用逗号/换行分隔</span>
+      </div>
+      <textarea
+        class="link-input"
+        id="linkInput"
+        placeholder="在此粘贴链接，一行一个：&#10;示例1：只粘贴链接 https://github.com&#10;示例2：链接+中文名+分类 https://www.bilibili.com/ 哔哩哔哩（视频）&#10;示例3：链接+中文名 https://chat.deepseek.com DeepSeek AI助手"
+      ></textarea>
+      <div class="format-tip" id="formatTip">以上格式都可以 ✓ 输入后自动隐藏</div>
+      <div class="input-footer">
+        <span class="link-count" id="linkCount">0 个链接已解析</span>
+        <button class="btn-parse" id="parseBtn">开始生成</button>
+      </div>
     </div>
   </div>
 
