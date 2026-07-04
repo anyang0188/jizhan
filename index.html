@@ -57,16 +57,16 @@
       <div class="input-card">
         <div class="input-card-header">
           <span class="input-card-title">📋 粘贴你的链接</span>
-          <span class="input-card-hint">一行一个，或用逗号分隔</span>
+          <button class="btn-sample" id="sampleBtn">填入示例</button>
         </div>
         <textarea class="link-input" id="linkInput"
           placeholder="https://github.com&#10;https://www.bilibili.com/ 哔哩哔哩（视频）&#10;https://chat.deepseek.com DeepSeek"
         ></textarea>
         <div class="input-footer">
-          <span class="link-count" id="linkCount">0 个链接</span>
-          <button class="btn btn-primary" id="parseBtn">开始生成</button>
+          <span class="link-count" id="linkCount">实时检测 URL…</span>
+          <button class="btn btn-primary" id="parseBtn">解析链接</button>
         </div>
-        <div class="format-tip" id="formatTip">所有格式都可以 ✓ 输入后隐藏</div>
+        <div class="format-tip" id="formatTip">支持 3 种格式：纯链接 / 链接+中文名 / 链接+名（分类）</div>
       </div>
 
     </section>
@@ -76,9 +76,9 @@
 
       <!-- 空状态 -->
       <div class="empty-state" id="emptyState">
-        <div class="empty-icon">📦</div>
-        <h3 class="empty-title">粘贴链接开始</h3>
-        <p class="empty-desc">把你的收藏链接贴进来，一键生成漂亮的导航站</p>
+        <div class="empty-icon">🔗</div>
+        <h3 class="empty-title">还没开始呢</h3>
+        <p class="empty-desc">左边粘贴链接，或点「填入示例」快速体验效果</p>
       </div>
 
       <!-- 分类预览 -->

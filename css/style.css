@@ -226,10 +226,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border);
   flex-shrink: 0;
+  transition: transform var(--transition);
 }
-.theme-icon { font-size: 11px; line-height: 1; }
+.theme-active .theme-color { transform: scale(1.15); }
+.theme-icon { font-size: 10px; color: #fff; font-weight: 700; line-height: 1; }
 .theme-name { font-size: 11px; color: var(--text-secondary); white-space: nowrap; }
 
 /* Input Card (textarea section) */
@@ -251,9 +252,20 @@ body {
   color: var(--text);
 }
 
-.input-card-hint {
-  font-size: 11px;
-  color: var(--text-light);
+.btn-sample {
+  font-size: 12px;
+  color: var(--primary);
+  background: var(--primary-light);
+  border: none;
+  padding: 3px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-weight: 600;
+}
+.btn-sample:hover {
+  background: var(--primary);
+  color: #fff;
 }
 
 .link-input {
@@ -309,6 +321,11 @@ body {
 .btn-primary:hover {
   background: var(--primary-hover);
   box-shadow: 0 2px 8px rgba(79,110,247,0.3);
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 .btn-export {
@@ -874,25 +891,26 @@ body {
    ======================================== */
 .toast {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0,0,0,0.78);
+  bottom: 24px;
+  right: 24px;
+  transform: translateY(0);
+  background: rgba(0,0,0,0.82);
   color: #fff;
-  padding: 12px 24px;
+  padding: 10px 20px;
   border-radius: var(--radius-sm);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   z-index: 9999;
   pointer-events: none;
-  animation: toastAnim 2s ease forwards;
+  box-shadow: var(--shadow-md);
+  animation: toastAnim 2.2s ease forwards;
 }
 
 @keyframes toastAnim {
-  0% { opacity: 0; transform: translate(-50%, -30%); }
-  10% { opacity: 1; transform: translate(-50%, -50%); }
-  80% { opacity: 1; transform: translate(-50%, -50%); }
-  100% { opacity: 0; transform: translate(-50%, -40%); }
+  0% { opacity: 0; transform: translateY(16px); }
+  10% { opacity: 1; transform: translateY(0); }
+  80% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-8px); }
 }
 
 @keyframes fadeIn {
