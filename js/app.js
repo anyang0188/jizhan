@@ -730,7 +730,11 @@ function showGuide() {
       '<div class="section-title">⚠️ 注意事项</div>' +
       '<div class="note-item"><span class="note-icon">📱</span><span class="note-text">生成的是静态 HTML 文件，可在任何浏览器打开</span></div>' +
       '<div class="note-item"><span class="note-icon">💾</span><span class="note-text">建议先在电脑上测试，确认无误后再使用</span></div>' +
-      '<div class="note-item"><span class="note-icon">🌐</span><span class="note-text">HTML 文件支持部署到服务器，生成可分享的网页链接</span></div>'
+      '<div class="note-item"><span class="note-icon">🌐</span><span class="note-text">HTML 文件支持部署到服务器，生成可分享的网页链接</span></div>' +
+
+      '<div class="section-title">🌐 代部署服务</div>' +
+      '<div class="feature-item"><span class="feature-icon">🛠️</span><span class="feature-text">不想自己动手？帮你把导航站部署到线上，生成可分享的链接 · 费用 <strong>5 元起</strong></span></div>' +
+      '<div class="feature-item"><span class="feature-icon">📞</span><span class="feature-text">联系微信：<strong>anyang0188</strong>（备注"导航站部署"）</span></div>'
   });
 }
 
