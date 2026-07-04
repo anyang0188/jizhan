@@ -2,6 +2,14 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* 过渡动画（屏幕旋转时平滑过渡） */
+body, .container, .top-bar, .settings-card, .input-card, .preview-card,
+.link-input, .form-row, .theme-picker, .bottom-actions,
+.modal-content, .category-item, .cat-sites, .empty-state {
+  transition: all 0.25s ease;
+}
+body { transition: background 0.3s; }
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   background: #F5F6FA;
@@ -12,7 +20,7 @@ body {
 
 .container {
   padding: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   background: #F5F6FA;
   max-width: 600px;
   margin: 0 auto;
@@ -160,7 +168,7 @@ body {
 
 .link-input {
   width: 100%;
-  height: 160px;
+  height: clamp(80px, 25vh, 160px);
   background: #F8FAFC;
   border-radius: 6px;
   padding: 8px;
@@ -685,48 +693,67 @@ body {
 .confirm-btn-confirm { color: #4F6EF7; font-weight: 600; }
 .confirm-btn:hover { background: #F5F6FA; }
 
-/* ===== 横屏适配 ===== */
-@media (orientation: landscape) and (max-height: 500px) {
-  /* 容器全宽 */
-  .container { max-width: 100%; padding: 0 8px; }
+/* ===== 响应式：横屏（手机/平板横过来） ===== */
+@media (orientation: landscape) {
 
-  /* 顶部栏紧凑 */
-  .top-bar { padding: 8px 12px; }
-  .logo-icon { font-size: 16px; }
-  .logo-text { font-size: 17px; }
-  .logo-sub { font-size: 10px; padding: 1px 6px; }
-  .guide-btn { padding: 2px 6px; }
+  .container {
+    max-width: 100%;
+    padding: 0 10px;
+    min-height: 100dvh;
+  }
+
+  /* 顶栏更紧凑 */
+  .top-bar { padding: 8px 14px; }
+  .logo-icon { font-size: 17px; }
+  .logo-text { font-size: 18px; letter-spacing: 0; }
+  .logo-sub { font-size: 10px; padding: 1px 7px; }
+  .guide-btn { padding: 2px 7px; }
   .guide-text { font-size: 10px; }
-  .guide-icon { font-size: 10px; }
+  .guide-icon { font-size: 11px; }
 
-  /* 设置 + 输入并排 */
+  /* ---- 输入区：设置卡 + 输入卡 并排 ---- */
   .form-row {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     align-items: stretch;
   }
-  .settings-card, .input-card {
-    flex: 1;
-    margin: 6px 0;
-    padding: 10px;
+  .settings-card {
+    flex: 0 0 240px;
+    margin: 8px 0;
+    padding: 10px 12px;
   }
-  .settings-card { max-width: 280px; flex-shrink: 0; }
-  .input-card { flex: 1; min-width: 0; }
+  .input-card {
+    flex: 1;
+    min-width: 0;
+    margin: 8px 0;
+    padding: 10px 12px;
+  }
 
-  /* 表单组内联排列 */
+  /* 设置卡内部紧凑 */
   .settings-card .form-group { margin-bottom: 6px; }
-  .label { font-size: 11px; margin-bottom: 2px; }
-  .input { height: 26px; font-size: 12px; }
+  .label { font-size: 11px; margin-bottom: 3px; }
+  .input { height: 28px; font-size: 13px; }
 
-  /* 主题选择器水平单行 */
-  .theme-picker { flex-wrap: nowrap; gap: 4px; overflow-x: auto; padding-bottom: 2px; }
+  /* 主题：水平一行溢出滚动 */
+  .theme-picker {
+    flex-wrap: nowrap;
+    gap: 3px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 1px;
+  }
+  .theme-picker::-webkit-scrollbar { display: none; }
   .theme-item { padding: 2px 4px; flex-direction: row; gap: 2px; }
-  .theme-color { width: 22px; height: 22px; }
-  .theme-icon { font-size: 11px; }
+  .theme-color { width: 24px; height: 24px; }
+  .theme-icon { font-size: 12px; }
   .theme-name { font-size: 9px; }
 
-  /* 输入框更矮 */
-  .link-input { height: 80px; font-size: 12px; padding: 6px; }
+  /* 输入卡内部紧凑 */
+  .link-input {
+    height: clamp(60px, 18vh, 90px);
+    font-size: 12px;
+    padding: 6px 8px;
+  }
   .card-header { margin-bottom: 4px; }
   .card-title { font-size: 13px; }
   .card-hint { font-size: 10px; }
@@ -734,85 +761,106 @@ body {
   .btn-parse { font-size: 11px; padding: 4px 10px; }
   .format-tip { font-size: 11px; padding: 2px 0; margin-top: 2px; }
 
-  /* 分类预览紧凑 */
-  .preview-card { margin: 6px 0; padding: 10px; }
-  .category-item { padding: 4px 0; }
-  .cat-header { margin-bottom: 3px; gap: 3px; }
+  /* ---- 分类预览紧凑 ---- */
+  .preview-card { margin: 8px 0; padding: 10px; }
+  .category-item { padding: 5px 0; }
+  .cat-header { margin-bottom: 3px; gap: 4px; }
   .cat-icon { font-size: 12px; }
   .cat-name { font-size: 12px; }
   .cat-count { font-size: 10px; }
-  .move-btn { font-size: 12px; padding: 1px 3px; }
+  .move-btn { font-size: 12px; padding: 1px 4px; }
+
+  /* 分类下的网站在横屏中可用更多列 */
   .cat-sites { gap: 3px; padding-left: 16px; }
   .cat-site { padding: 2px 5px; }
-  .site-name { font-size: 10px; max-width: 80px; }
+  .site-name { font-size: 10px; max-width: 90px; }
   .site-move { width: 14px; height: 14px; line-height: 14px; font-size: 9px; }
 
   /* 底部操作紧凑 */
-  .bottom-actions { padding: 6px 0 12px; gap: 6px; }
-  .btn-export { font-size: 12px; padding: 8px 0; }
-  .btn-reset { font-size: 12px; padding: 8px 0; }
+  .bottom-actions { padding: 6px 0 14px; gap: 8px; }
+  .btn-export { font-size: 13px; padding: 9px 0; }
+  .btn-reset { font-size: 13px; padding: 9px 0; }
 
   /* 空状态 */
-  .empty-state { padding: 20px 12px; }
-  .empty-icon { font-size: 30px; }
+  .empty-state { padding: 24px 12px; }
+  .empty-icon { font-size: 32px; }
   .empty-text { font-size: 12px; }
 
-  /* 弹窗在横屏中更紧凑 */
+  /* ---- 弹窗全部紧凑 ---- */
   .modal-content { max-height: 85vh; }
-  .modal-header { padding: 10px 12px 8px; }
+  .modal-header { padding: 10px 14px 7px; }
   .modal-title { font-size: 14px; }
-  .modal-body { padding: 10px 12px; }
+  .modal-body { padding: 10px 14px; }
   .modal-close { font-size: 16px; }
   .modal-btn-group { margin-top: 10px; gap: 6px; }
-  .modal-btn { font-size: 13px; padding: 8px 0; }
+  .modal-btn { font-size: 12px; padding: 8px 0; }
 
-  .section-title { font-size: 13px; margin: 10px 0 6px; padding-bottom: 3px; }
+  .section-title { font-size: 13px; margin: 8px 0 5px; padding-bottom: 3px; }
   .feature-item { gap: 4px; margin-bottom: 4px; }
   .feature-icon { font-size: 12px; }
   .feature-text { font-size: 12px; }
-  .guide-step { gap: 6px; margin-bottom: 8px; }
+  .guide-step { gap: 5px; margin-bottom: 6px; }
   .step-num { font-size: 12px; }
   .step-text { font-size: 12px; }
-  .format-intro { font-size: 11px; padding: 4px 6px; margin-bottom: 6px; }
+  .format-intro { font-size: 11px; padding: 4px 6px; margin-bottom: 5px; }
   .format-label { font-size: 11px; }
-  .format-code { font-size: 11px; padding: 3px 5px; margin-bottom: 4px; }
+  .format-code { font-size: 11px; padding: 3px 5px; margin-bottom: 3px; }
   .format-note { font-size: 11px; padding: 5px; }
-  .note-item { gap: 4px; margin-bottom: 4px; }
+  .note-item { gap: 4px; margin-bottom: 3px; }
   .note-icon { font-size: 11px; }
   .note-text { font-size: 11px; }
 
   /* 图标选择弹窗 */
   .icon-grid { grid-template-columns: repeat(8, 1fr); gap: 4px; }
   .icon-item { padding: 5px 0; }
-  .icon-emoji { font-size: 16px; }
+  .icon-emoji { font-size: 17px; }
 
-  /* 移动分类弹窗 */
+  /* 移动分类 */
   .move-cat-item { padding: 7px 6px; margin-bottom: 4px; }
   .move-cat-icon { font-size: 13px; }
   .move-cat-name { font-size: 12px; }
 
   /* 输入弹窗 */
-  .prompt-modal { max-width: 300px; }
-  .prompt-title { font-size: 14px; padding: 10px 12px 6px; }
-  .prompt-input { height: 30px; font-size: 12px; width: calc(100% - 24px); margin: 0 12px; }
-  .prompt-btns { padding: 10px 12px; gap: 6px; }
-  .prompt-btn { font-size: 13px; padding: 4px 12px; }
+  .prompt-modal { max-width: 320px; }
+  .prompt-title { font-size: 14px; padding: 10px 14px 6px; }
+  .prompt-input { height: 30px; font-size: 13px; width: calc(100% - 28px); margin: 0 14px; }
+  .prompt-btns { padding: 10px 14px; gap: 6px; }
+  .prompt-btn { font-size: 13px; padding: 5px 14px; }
 
   /* 确认弹窗 */
-  .confirm-modal { max-width: 260px; }
-  .confirm-title { font-size: 14px; padding: 10px 12px 4px; }
-  .confirm-content { font-size: 13px; padding: 0 12px 10px; }
+  .confirm-modal { max-width: 280px; }
+  .confirm-title { font-size: 14px; padding: 10px 14px 4px; }
+  .confirm-content { font-size: 13px; padding: 0 14px 10px; }
   .confirm-btn { font-size: 13px; padding: 8px 0; }
 
   /* Toast */
   .toast { font-size: 12px; padding: 8px 16px; }
 }
 
-/* 更宽的竖屏场景（平板/大屏手机） */
-@media (min-width: 700px) {
+/* ===== 平板 / 大屏手机竖屏（宽屏竖屏也并排） ===== */
+@media (min-width: 700px) and (orientation: portrait) {
   .container { max-width: 780px; }
-  .form-row { display: flex; gap: 12px; align-items: flex-start; }
-  .settings-card { flex: 0 0 280px; margin: 10px 0; }
+  .form-row { display: flex; gap: 14px; align-items: flex-start; }
+  .settings-card { flex: 0 0 260px; margin: 10px 0; }
   .input-card { flex: 1; margin: 10px 0; min-width: 0; }
   .preview-card { margin-left: 0; margin-right: 0; }
+  .link-input { height: clamp(90px, 22vh, 150px); }
+}
+
+/* ===== 桌面宽屏（>1000px） ===== */
+@media (min-width: 1000px) {
+  .container { max-width: 960px; }
+  .form-row { display: flex; gap: 16px; align-items: flex-start; }
+  .settings-card { flex: 0 0 280px; margin: 12px 0; }
+  .input-card { flex: 1; margin: 12px 0; min-width: 0; }
+  .preview-card { margin-left: 0; margin-right: 0; }
+  .link-input { height: 110px; font-size: 13px; }
+  .cat-sites { gap: 5px; }
+  .site-name { max-width: 140px; font-size: 12px; }
+  .btn-export { font-size: 14px; }
+  .btn-reset { font-size: 14px; }
+
+  /* 桌面横屏：导航站名称区域紧凑 */
+  .top-bar { padding: 12px 16px; }
+  .logo-text { font-size: 20px; }
 }
