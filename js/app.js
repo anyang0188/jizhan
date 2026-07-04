@@ -186,7 +186,7 @@ function updatePreviewColors() {
     card.style.background = state.themeStyle.cardBg;
     $('previewTitle').style.color = state.themeStyle.text;
   }
-  $('container').style.background = state.themeStyle.bg;
+  $('app').style.background = state.themeStyle.bg;
 }
 
 // ===== 分类预览渲染 =====
