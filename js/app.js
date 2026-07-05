@@ -202,28 +202,31 @@ function renderThemes() {
   // 自定义主题（如果已选过）
   if (customThemeColor) {
     var ca = state.currentTheme === 'custom';
-    html += '<div class="theme-item ' + (ca ? 'theme-active' : '') + '" data-theme="custom">' +
+    html += '<div class="theme-item ' + (ca ? 'theme-active' : '') + '" data-theme="custom" data-custom="1">' +
       '<div class="theme-color" style="background:' + customThemeColor + ';">' +
         '<span class="theme-icon">' + (ca ? 'V' : '') + '</span>' +
       '</div>' +
       '<span class="theme-name">\u81ea\u5b9a\u4e49</span>' +
     '</div>';
   }
-  // 更多按钮
-  html += '<div class="theme-item theme-more" id="themeMore">' +
-    '<div class="theme-color" style="background:#E5E7EB;border:1px dashed #B0B8C5;">' +
-      '<span class="theme-icon" style="color:#6B7280;">+</span>' +
+  // 自定义取色器入口
+  html += '<div class="theme-item theme-picker-btn" id="themePickerBtn">' +
+    '<div class="theme-color" style="background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red);">' +
+      '<span class="theme-icon" style="color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.3);">\u2716</span>' +
     '</div>' +
-    '<span class="theme-name">\u66f4\u591a</span>' +
+    '<span class="theme-name">\u81ea\u5b9a\u4e49</span>' +
   '</div>';
 
   var picker = $('themePicker');
   picker.innerHTML = html;
+
+  // 预设主题点击
   picker.querySelectorAll('.theme-item[data-theme]').forEach(function(item) {
     item.addEventListener('click', function() {
       var themeId = this.getAttribute('data-theme');
+      var isCustom = this.getAttribute('data-custom') === '1';
       var theme;
-      if (themeId === 'custom') {
+      if (isCustom) {
         theme = generateCustomTheme(customThemeColor);
       } else {
         theme = THEMES.find(function(t) { return t.id === themeId; }) || THEMES[0];
@@ -235,9 +238,10 @@ function renderThemes() {
     });
   });
 
-  var moreBtn = $('themeMore');
-  if (moreBtn) {
-    moreBtn.addEventListener('click', function() {
+  // 自定义取色器按钮
+  var pickerBtn = $('themePickerBtn');
+  if (pickerBtn) {
+    pickerBtn.addEventListener('click', function() {
       var input = document.createElement('input');
       input.type = 'color';
       input.value = customThemeColor || '#4F6EF7';
