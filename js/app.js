@@ -476,17 +476,38 @@ function moveCategory(index, direction) {
 var SAMPLE_LINKS = [
   'https://chat.deepseek.com DeepSeek（AI 对话）',
   'https://kimi.moonshot.cn Kimi（AI 对话）',
+  'https://chatgpt.com ChatGPT（AI 对话）',
   'https://claude.ai Claude（AI 对话）',
+  'https://gemini.google.com Gemini（AI 对话）',
+  'https://www.doubao.com 豆包（AI 对话）',
   'https://midjourney.com Midjourney（AI 创作）',
   'https://suno.com Suno（AI 创作）',
+  'https://klingai.kuaishou.com 可灵AI（AI 创作）',
+  'https://www.jianying.com 剪映（AI 创作）',
   'https://github.com GitHub（开发者工具）',
   'https://vercel.com Vercel（开发者工具）',
-  'https://www.google.com Google',
-  'https://www.bilibili.com 哔哩哔哩（视频平台）',
-  'https://www.zhihu.com 知乎（社交社区）',
-  'https://www.baidu.com 百度',
   'https://stackoverflow.com Stack Overflow（开发者工具）',
-  'https://www.figma.com Figma（设计工具）'
+  'https://cursor.sh Cursor（开发者工具）',
+  'https://www.cloudflare.com Cloudflare（开发者工具）',
+  'https://www.baidu.com 百度',
+  'https://www.google.com Google',
+  'https://www.bing.com Bing',
+  'https://www.bilibili.com 哔哩哔哩（视频平台）',
+  'https://www.youtube.com YouTube（视频平台）',
+  'https://www.douyin.com 抖音（视频平台）',
+  'https://www.zhihu.com 知乎（社交社区）',
+  'https://www.xiaohongshu.com 小红书（社交社区）',
+  'https://weibo.com 微博（社交社区）',
+  'https://www.taobao.com 淘宝（电商平台）',
+  'https://www.jd.com 京东（电商平台）',
+  'https://www.figma.com Figma（设计工具）',
+  'https://mastergo.com MasterGo（设计工具）',
+  'https://www.notion.so Notion（效率办公）',
+  'https://www.feishu.cn 飞书（效率办公）',
+  'https://pan.baidu.com 百度网盘（云存储）',
+  'https://www.aliyundrive.com 阿里云盘（云存储）',
+  'https://36kr.com 36氪（新闻阅读）',
+  'https://sspai.com 少数派（新闻阅读）'
 ];
 
 function fillSample() {
@@ -660,6 +681,11 @@ function generateSingleFile(siteTitle, siteSubtitle, themeColor, themeId) {
 '<meta charset="UTF-8">\n' +
 '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
 '<title>' + escapedTitle + '</title>\n' +
+'<meta name="description" content="' + escapeAttr(siteSubtitle || siteTitle + ' - 个人导航站') + '">\n' +
+'<meta property="og:title" content="' + escapeAttr(siteTitle) + '">\n' +
+'<meta property="og:description" content="' + escapeAttr(siteSubtitle || siteTitle + ' - 收录实用网站和工具') + '">\n' +
+'<meta property="og:type" content="website">\n' +
+'<meta name="robots" content="index, follow">\n' +
 '<style>\n' +
 '*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }\n' +
 ':root {\n' +
