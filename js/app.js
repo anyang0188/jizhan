@@ -758,7 +758,7 @@ function generateSingleFile(siteTitle, siteSubtitle, themeColor, themeId) {
 '<div class="search-bar"><div class="search-inner"><span class="search-icon">🔍</span><input type="text" id="searchInput" placeholder="搜索网址、工具..." autocomplete="off"><span class="search-shortcut">Ctrl+K</span></div></div>\n\n' +
 '<div class="nav-container" id="navContainer"></div>\n\n' +
 '<button class="back-top" id="backTop" title="返回顶部">⬆</button>\n\n' +
-'<footer class="footer"><p>' + escapedTitle + ' &copy; ' + year + '</p></footer>\n\n' +
+'<footer class="footer"><p>' + escapedTitle + ' &copy; ' + year + '</p><button class="contact-btn" onclick="document.getElementById(\'contactInfo\').classList.toggle(\'show\')">🌐 生成在线版</button><div id="contactInfo" class="contact-info">📞 微信：anyang0188 ｜ 帮你部署导航站到服务器，生成可分享的网页链接</div></footer>\n\n' +
 '<script>\n' + dataJs + '\n</script>\n' +
 '<script>\n' + appJs + '\n</script>\n' +
 '</body>\n</html>';
@@ -894,7 +894,11 @@ function showGuide() {
       '<div class="section-title">⚠️ 注意事项</div>' +
       '<div class="note-item"><span class="note-icon">📱</span><span class="note-text">生成的是静态 HTML 文件，可在任何浏览器打开</span></div>' +
       '<div class="note-item"><span class="note-icon">💾</span><span class="note-text">建议先在电脑上测试，确认无误后再使用</span></div>' +
-      '<div class="note-item"><span class="note-icon">🌐</span><span class="note-text">HTML 文件支持部署到服务器，生成可分享的网页链接</span></div>'
+      '<div class="note-item"><span class="note-icon">🌐</span><span class="note-text">HTML 文件支持部署到服务器，生成可分享的网页链接</span></div>' +
+
+      '<div class="section-title">🌐 代部署服务</div>' +
+      '<div class="feature-item"><span class="feature-icon">🛠️</span><span class="feature-text">不想自己动手？帮你把导航站部署到线上，生成可分享的链接 · 费用 <strong>5 元起</strong></span></div>' +
+      '<div class="feature-item"><span class="feature-icon">📞</span><span class="feature-text">联系微信：<strong>anyang0188</strong>（备注"导航站部署"）</span></div>'
   });
 }
 
