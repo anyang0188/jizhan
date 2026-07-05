@@ -214,6 +214,8 @@ body {
   background: var(--bg);
 }
 .theme-item:hover { opacity: 0.85; }
+.theme-more { opacity: 0.7; }
+.theme-more:hover { opacity: 1; }
 .theme-active {
   border-color: var(--primary);
   background: var(--primary-light);

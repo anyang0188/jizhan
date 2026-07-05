@@ -154,6 +154,39 @@ function showPrompt(title, defaultValue, placeholder) {
   });
 }
 
+// ===== 自定义主题 =====
+var customThemeColor = null;
+try { customThemeColor = localStorage.getItem('jizhan_theme_color'); } catch(e) {}
+
+function lightenColor(hex, amt) {
+  var r = parseInt(hex.substring(1,3), 16);
+  var g = parseInt(hex.substring(3,5), 16);
+  var b = parseInt(hex.substring(5,7), 16);
+  r = Math.min(255, r + amt);
+  g = Math.min(255, g + amt);
+  b = Math.min(255, b + amt);
+  return '#' + [r,g,b].map(function(v){ return v.toString(16).padStart(2,'0'); }).join('');
+}
+
+function generateCustomTheme(hexColor) {
+  var c = hexColor || '#4F6EF7';
+  var r = parseInt(c.substring(1,3), 16);
+  var g = parseInt(c.substring(3,5), 16);
+  var b = parseInt(c.substring(5,7), 16);
+  var lightBg = 'rgb(' + Math.min(255, r + 100) + ',' + Math.min(255, g + 100) + ',' + Math.min(255, b + 100) + ')';
+  return {
+    id: 'custom', name: '\u81ea\u5b9a\u4e49', color: c,
+    css: {
+      '--bg': lightBg, '--card-bg': '#FFFFFF', '--text': '#2C3E50',
+      '--text-secondary': '#6B7280', '--border': 'rgba(' + r + ',' + g + ',' + b + ',0.25)',
+      '--shadow': '0 2px 12px rgba(0,0,0,0.06)',
+      '--header-bg': 'linear-gradient(135deg, ' + c + ' 0%, ' + lightenColor(c, 40) + ' 100%)',
+      '--header-text': '#ffffff'
+    },
+    preview: { bg: lightBg, cardBg: '#FFFFFF', text: '#2C3E50' }
+  };
+}
+
 // ===== 主题渲染 =====
 function renderThemes() {
   var html = '';
@@ -161,23 +194,65 @@ function renderThemes() {
     var active = state.currentTheme === t.id;
     html += '<div class="theme-item ' + (active ? 'theme-active' : '') + '" data-theme="' + t.id + '">' +
       '<div class="theme-color" style="background:' + t.color + ';">' +
-        '<span class="theme-icon">' + (active ? '✓' : '') + '</span>' +
+        '<span class="theme-icon">' + (active ? 'V' : '') + '</span>' +
       '</div>' +
       '<span class="theme-name">' + t.name + '</span>' +
     '</div>';
   });
+  // 自定义主题（如果已选过）
+  if (customThemeColor) {
+    var ca = state.currentTheme === 'custom';
+    html += '<div class="theme-item ' + (ca ? 'theme-active' : '') + '" data-theme="custom">' +
+      '<div class="theme-color" style="background:' + customThemeColor + ';">' +
+        '<span class="theme-icon">' + (ca ? 'V' : '') + '</span>' +
+      '</div>' +
+      '<span class="theme-name">\u81ea\u5b9a\u4e49</span>' +
+    '</div>';
+  }
+  // 更多按钮
+  html += '<div class="theme-item theme-more" id="themeMore">' +
+    '<div class="theme-color" style="background:#E5E7EB;border:1px dashed #B0B8C5;">' +
+      '<span class="theme-icon" style="color:#6B7280;">+</span>' +
+    '</div>' +
+    '<span class="theme-name">\u66f4\u591a</span>' +
+  '</div>';
+
   var picker = $('themePicker');
   picker.innerHTML = html;
-  picker.querySelectorAll('.theme-item').forEach(function(item) {
+  picker.querySelectorAll('.theme-item[data-theme]').forEach(function(item) {
     item.addEventListener('click', function() {
       var themeId = this.getAttribute('data-theme');
-      var theme = THEMES.find(function(t) { return t.id === themeId; }) || THEMES[0];
+      var theme;
+      if (themeId === 'custom') {
+        theme = generateCustomTheme(customThemeColor);
+      } else {
+        theme = THEMES.find(function(t) { return t.id === themeId; }) || THEMES[0];
+      }
       state.currentTheme = themeId;
       state.themeStyle = theme.preview;
       renderThemes();
       updatePreviewColors();
     });
   });
+
+  var moreBtn = $('themeMore');
+  if (moreBtn) {
+    moreBtn.addEventListener('click', function() {
+      var input = document.createElement('input');
+      input.type = 'color';
+      input.value = customThemeColor || '#4F6EF7';
+      input.addEventListener('input', function() {
+        customThemeColor = this.value;
+        try { localStorage.setItem('jizhan_theme_color', customThemeColor); } catch(e) {}
+        var theme = generateCustomTheme(customThemeColor);
+        state.currentTheme = 'custom';
+        state.themeStyle = theme.preview;
+        renderThemes();
+        updatePreviewColors();
+      });
+      input.click();
+    });
+  }
 }
 
 function updatePreviewColors() {
