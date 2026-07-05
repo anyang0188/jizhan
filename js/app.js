@@ -45,7 +45,6 @@ var THEMES = [
 
 // ===== 状态 =====
 var state = {
-  linkText: '',
   siteTitle: '我的导航站',
   siteSubtitle: '',
   parsedCount: 0,
@@ -187,7 +186,6 @@ function updatePreviewColors() {
     card.style.background = state.themeStyle.cardBg;
     $('previewTitle').style.color = state.themeStyle.text;
   }
-  $('app').style.background = state.themeStyle.bg;
 }
 
 // ===== 分类预览渲染 =====
@@ -418,19 +416,23 @@ function fillSample() {
   showToast('已填入 ' + SAMPLE_LINKS.length + ' 个示例链接');
 }
 
-// ===== 实时更新链接计数 =====
+// ===== 实时更新链接计数（防抖） =====
 var countTimer = null;
 function updateLinkCount() {
-  var text = $('linkInput').value.trim();
-  var count = text ? Classifier.extractUrls(text).length : 0;
-  var el = $('linkCount');
-  if (count > 0) {
-    el.textContent = '检测到 ' + count + ' 个链接';
-    el.style.color = 'var(--primary)';
-  } else {
-    el.textContent = '实时检测 URL…';
-    el.style.color = 'var(--text-secondary)';
-  }
+  if (countTimer) clearTimeout(countTimer);
+  countTimer = setTimeout(function() {
+    var text = $('linkInput').value.trim();
+    var count = text ? Classifier.extractUrls(text).length : 0;
+    var el = $('linkCount');
+    if (count > 0) {
+      el.textContent = '检测到 ' + count + ' 个链接';
+      el.style.color = 'var(--primary)';
+    } else {
+      el.textContent = '实时检测 URL…';
+      el.style.color = 'var(--text-secondary)';
+    }
+    countTimer = null;
+  }, 200);
 }
 
 // ===== 解析链接 =====
@@ -553,7 +555,7 @@ function generateSingleFile(siteTitle, siteSubtitle, themeColor, themeId) {
 '  background: var(--bg);\n' +
 '  color: var(--text);\n' +
 '  line-height: 1.6;\n' +
-'  min-height: 100vh;\n' +
+'  min-height: 100dvh;\n' +
 '}\n' +
 '.header { background: var(--header-bg, linear-gradient(135deg, var(--primary) 0%, ' + hexToRgba(themeColor, 0.75) + ' 100%)); color: var(--header-text, #fff); padding: 24px 0 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 16px ' + hexToRgba(themeColor, 0.25) + '; }\n' +
 '.header-inner { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }\n' +
@@ -685,7 +687,6 @@ function onReset() {
       $('parseBtn').disabled = false;
       $('parseBtn').innerHTML = '解析链接';
       $('parseBtn').style.opacity = '1';
-      state.linkText = '';
       state.parsedCount = 0;
       state.classifiedData = [];
       state.hasParsed = false;
@@ -715,7 +716,7 @@ function showGuide() {
 
       '<div class="section-title">📝 使用方法</div>' +
       '<div class="guide-step"><span class="step-num">1️⃣</span><span class="step-text">在上方输入框粘贴链接，一行一个</span></div>' +
-      '<div class="guide-step"><span class="step-num">2️⃣</span><span class="step-text">点击"开始生成"按钮，自动解析和分类</span></div>' +
+      '<div class="guide-step"><span class="step-num">2️⃣</span><span class="step-text">点击"解析链接"按钮，自动解析和分类</span></div>' +
       '<div class="guide-step"><span class="step-num">3️⃣</span><span class="step-text">预览结果，可自由编辑分类图标/名称/排序/移动网站</span></div>' +
       '<div class="guide-step"><span class="step-num">4️⃣</span><span class="step-text">选择喜欢的背景主题</span></div>' +
       '<div class="guide-step"><span class="step-num">5️⃣</span><span class="step-text">点击"下载导航站文件"导出</span></div>' +
@@ -780,7 +781,6 @@ function closeModal() {
 function bindEvents() {
   // 链接输入 - 实时计数
   $('linkInput').addEventListener('input', function() {
-    state.linkText = this.value;
     $('formatTip').style.display = this.value ? 'none' : 'block';
     updateLinkCount();
   });
@@ -790,6 +790,14 @@ function bindEvents() {
 
   // 解析按钮
   $('parseBtn').addEventListener('click', onParse);
+
+  // Ctrl+Enter 快捷解析
+  $('linkInput').addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      onParse();
+    }
+  });
 
   // 导出按钮
   $('exportBtn').addEventListener('click', onExport);
