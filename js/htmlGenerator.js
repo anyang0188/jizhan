@@ -27,6 +27,10 @@ function escapeAttr(str) {
   return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
+function getDomain(url) {
+  try { return new URL(url).hostname.replace('www.', ''); } catch(e) { return url; }
+}
+
 function generateAppJS() {
   return `(function() {
   'use strict';
@@ -43,9 +47,13 @@ function generateAppJS() {
       html += '<h2 class="nav-section-title">' + section.category + '</h2>';
       html += '<div class="nav-grid">';
       section.sites.forEach(function(site) {
+        var domain = getDomain(site.url);
         html += '<a href="' + escapeAttr(site.url) + '" target="_blank" class="nav-card" data-search-text="' +
           escapeAttr(site.name + ' ' + site.desc + ' ' + section.category) + '">';
-        html += '<div class="nav-card-icon">' + site.icon + '</div>';
+        html += '<div class="nav-card-icon">';
+        html += '<img src="https://www.google.com/s2/favicons?domain=' + escapeAttr(domain) + '&sz=64" alt="" class="nav-favicon" onerror="this.style.display=\'none\';this.parentNode.textContent=\'' + site.icon + '\'" loading="lazy">';
+        html += '<span class="nav-fallback">' + site.icon + '</span>';
+        html += '</div>';
         html += '<div class="nav-card-info">';
         html += '<div class="nav-card-name">' + site.name + '</div>';
         html += '<div class="nav-card-desc">' + site.desc + '</div>';
@@ -56,6 +64,10 @@ function generateAppJS() {
       html += '</div></div>';
     });
     navContainer.innerHTML = html;
+  }
+
+  function getDomain(url) {
+    try { return new URL(url).hostname.replace('www.', ''); } catch(e) { return url; }
   }
 
   function bindEvents() {
@@ -100,5 +112,6 @@ window.HtmlGenerator = {
   generateDataJs,
   generateAppJS,
   escapeHtml,
-  escapeAttr
+  escapeAttr,
+  getDomain
 };

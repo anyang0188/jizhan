@@ -282,8 +282,10 @@ function parseLinks(text) {
       title = NAME_MAP[domain] || NAME_MAP['www.' + domain] || domain;
     }
 
+    // 检查标题中是否有括号分类，如 "云盘（下载）"
     let forcedCategory = null;
-    const catMatch = title.match(/(.+)\s*[（(](.+?)[）)]$/);
+    const trimmed = title.trim();
+    const catMatch = trimmed.match(/^(.+?)[\s\u3000]*[（(【](.+?)[）)】]$/);
     if (catMatch) {
       title = catMatch[1].trim();
       forcedCategory = catMatch[2].trim();

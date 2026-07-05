@@ -706,7 +706,10 @@ function generateSingleFile(siteTitle, siteSubtitle, themeColor, themeId) {
 '.nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }\n' +
 '.nav-card { background: var(--card-bg); border-radius: var(--radius); padding: 18px 20px; display: flex; align-items: center; gap: 14px; text-decoration: none; color: var(--text); box-shadow: var(--shadow); transition: all var(--transition); border: 1px solid transparent; cursor: pointer; }\n' +
 '.nav-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); border-color: var(--primary-light); }\n' +
-'.nav-card-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }\n' +
+'.nav-card-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; overflow: hidden; position: relative; }\n' +
+'.nav-favicon { width: 24px; height: 24px; border-radius: 4px; position: absolute; }\n' +
+'.nav-fallback { font-size: 22px; }\n' +
+'.nav-card:hover .nav-favicon { display: block !important; }\n' +
 '.nav-card-info { flex: 1; min-width: 0; }\n' +
 '.nav-card-name { font-size: 15px; font-weight: 600; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n' +
 '.nav-card-desc { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n' +
