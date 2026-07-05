@@ -1,12 +1,12 @@
 // Service Worker - 集站 PWA 离线缓存
-var CACHE_NAME = 'jizhan-pwa-v4';
+var CACHE_NAME = 'jizhan-pwa-v5';
 var CACHE_FILES = [
   './',
   './index.html',
-  './css/style.css',
-  './js/classifier.js',
-  './js/htmlGenerator.js',
-  './js/app.js',
+  './css/style.css?v=5',
+  './js/classifier.js?v=5',
+  './js/htmlGenerator.js?v=5',
+  './js/app.js?v=5',
   './manifest.json',
   './icons/icon.svg'
 ];
