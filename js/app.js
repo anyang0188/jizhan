@@ -7,6 +7,7 @@
 'use strict';
 
 // ===== 常量 =====
+var VERSION = 'v5';
 var ICON_OPTIONS = ['🤖','🎨','📊','💻','🔍','📺','💬','🛒','🖌️','☁️','📰','📁',
   '⭐','🔥','🎯','⚡','🎮','🎵','📷','🌐','✉️','📱','🔧','💡','📚','💰','🏠','🗺️','📝','🎬','🎧','🏆','🥇','🛡️','🧰','🗂️','📌','🎈','🧩','🪄','🎪'];
 
@@ -56,6 +57,53 @@ var state = {
   moveCatIndex: -1,
   moveSiteIndex: -1
 };
+
+// ===== localStorage 持久化 =====
+var STORAGE_KEY = 'jizhan_state';
+
+function saveState() {
+  try {
+    var data = {
+      siteTitle: state.siteTitle,
+      siteSubtitle: state.siteSubtitle,
+      classifiedData: state.classifiedData,
+      hasParsed: state.hasParsed,
+      currentTheme: state.currentTheme,
+      parsedCount: state.parsedCount
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch(e) {}
+}
+
+function loadState() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    var data = JSON.parse(raw);
+    if (!data || !data.hasParsed) return false;
+    state.siteTitle = data.siteTitle || '我的导航站';
+    state.siteSubtitle = data.siteSubtitle || '';
+    state.classifiedData = data.classifiedData || [];
+    state.hasParsed = data.hasParsed || false;
+    state.currentTheme = data.currentTheme || 'clean';
+    state.parsedCount = data.parsedCount || 0;
+    // 恢复主题样式
+    var theme = THEMES.find(function(t) { return t.id === state.currentTheme; });
+    if (theme) {
+      state.themeStyle = theme.preview;
+    } else if (customThemeColor) {
+      var ct = generateCustomTheme(customThemeColor);
+      state.themeStyle = ct.preview;
+    }
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+
+function clearPersistedState() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+}
 
 // ===== 工具函数 =====
 function $(id) { return document.getElementById(id); }
@@ -235,6 +283,7 @@ function renderThemes() {
       state.themeStyle = theme.preview;
       renderThemes();
       updatePreviewColors();
+      saveState();
     });
   });
 
@@ -253,6 +302,7 @@ function renderThemes() {
         state.themeStyle = theme.preview;
         renderThemes();
         updatePreviewColors();
+        saveState();
       });
       input.click();
     });
@@ -354,6 +404,7 @@ function openIconPicker(index) {
       state.editingCategoryIndex = -1;
       closeModal();
       renderClassifiedData();
+      saveState();
     });
   });
 }
@@ -382,9 +433,11 @@ function editCategoryName(index) {
       }
       state.classifiedData.splice(index, 1);
       renderClassifiedData();
+      saveState();
       showToast('已自动合并到「' + newName + '」');
     } else {
       renderClassifiedData();
+      saveState();
     }
   });
 }
@@ -396,6 +449,7 @@ function editSiteName(catIndex, siteIndex) {
     if (newName) {
       state.classifiedData[catIndex].sites[siteIndex].name = newName;
       renderClassifiedData();
+      saveState();
     }
   });
 }
@@ -461,6 +515,7 @@ function confirmMoveSite(targetIndex) {
   state.moveSiteIndex = -1;
   closeModal();
   renderClassifiedData();
+  saveState();
   showToast('已移动到「' + targetName + '」', 'success');
 }
 
@@ -474,6 +529,7 @@ function moveCategory(index, direction) {
   data[index] = data[targetIndex];
   data[targetIndex] = temp;
   renderClassifiedData();
+  saveState();
 }
 
 // ===== 填入示例 =====
@@ -622,6 +678,7 @@ function onParse() {
 
     renderClassifiedData();
     updatePreviewColors();
+    saveState();
     showToast('解析成功', 'success');
   }, 150);
 }
@@ -629,33 +686,7 @@ function onParse() {
 // ===== 导出 HTML =====
 function onExport() {
   if (state.classifiedData.length === 0) { showToast('请先解析链接'); return; }
-
-  var totalSites = state.classifiedData.reduce(function(sum, cat) {
-    return sum + (cat.sites ? cat.sites.length : 0);
-  }, 0);
-
-  if (totalSites > 50) {
-    showExportWarn();
-  } else {
-    _doExport();
-  }
-}
-
-function showExportWarn() {
-  showModal({
-    title: '⚠️ 导出提示',
-    bodyHtml:
-      '<div class="feature-item"><span class="feature-icon">📊</span>' +
-      '<span class="feature-text">当前网站数量较多，导出文件可能较大。</span></div>' +
-      '<div class="feature-item"><span class="feature-icon">💡</span>' +
-      '<span class="feature-text">建议分批次操作，每次导出少量网站。</span></div>' +
-      '<div class="modal-btn-group">' +
-        '<button class="modal-btn modal-btn-secondary" id="warnCancel">取消</button>' +
-        '<button class="modal-btn modal-btn-primary" id="warnConfirm">继续导出</button>' +
-      '</div>'
-  });
-  $('warnCancel').addEventListener('click', closeModal);
-  $('warnConfirm').addEventListener('click', function() { closeModal(); _doExport(); });
+  _doExport();
 }
 
 function _doExport() {
@@ -737,9 +768,8 @@ function generateSingleFile(siteTitle, siteSubtitle, themeColor, themeId) {
 '.nav-card { background: var(--card-bg); border-radius: var(--radius); padding: 18px 20px; display: flex; align-items: center; gap: 14px; text-decoration: none; color: var(--text); box-shadow: var(--shadow); transition: all var(--transition); border: 1px solid transparent; cursor: pointer; }\n' +
 '.nav-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); border-color: var(--primary-light); }\n' +
 '.nav-card-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; overflow: hidden; position: relative; }\n' +
-'.nav-favicon { width: 24px; height: 24px; border-radius: 4px; position: absolute; }\n' +
-'.nav-fallback { font-size: 22px; }\n' +
-'.nav-card:hover .nav-favicon { display: block !important; }\n' +
+'.nav-favicon { width: 24px; height: 24px; border-radius: 4px; position: absolute; z-index: 1; }\n' +
+'.nav-fallback { position: absolute; z-index: 0; font-size: 22px; }\n' +
 '.nav-card-info { flex: 1; min-width: 0; }\n' +
 '.nav-card-name { font-size: 15px; font-weight: 600; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n' +
 '.nav-card-desc { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n' +
@@ -844,6 +874,8 @@ function onReset() {
       $('linkInput').value = '';
       $('siteTitle').value = '我的导航站';
       $('siteSubtitle').value = '';
+      state.siteTitle = '我的导航站';
+      state.siteSubtitle = '';
       $('linkCount').textContent = '实时检测 URL…';
       $('linkCount').style.color = 'var(--text-secondary)';
       $('formatTip').style.display = 'block';
@@ -854,6 +886,7 @@ function onReset() {
       state.classifiedData = [];
       state.hasParsed = false;
       renderClassifiedData();
+      clearPersistedState();
       showToast('已重置');
     }
   });
@@ -875,7 +908,7 @@ function showGuide() {
       '<div class="feature-item"><span class="feature-icon">📝</span><span class="feature-text">点击网站名称 → 修改显示名（导出时用）</span></div>' +
       '<div class="feature-item"><span class="feature-icon">⇅</span><span class="feature-text">点击 ⇅ 按钮 → 移动到其他分类</span></div>' +
       '<div class="feature-item"><span class="feature-icon">↑↓</span><span class="feature-text">点击 ↑↓ 按钮 → 调整分类顺序</span></div>' +
-      '<div class="feature-item"><span class="feature-icon">🎨</span><span class="feature-text">6 套背景主题：纯净白 / 极夜黑 / 海洋蓝 / 落日橙 / 森林绿 / 极光紫</span></div>' +
+      '<div class="feature-item"><span class="feature-icon">🎨</span><span class="feature-text">6 套背景主题 + 自定义取色器</span></div>' +
 
       '<div class="section-title">📝 使用方法</div>' +
       '<div class="guide-step"><span class="step-num">1️⃣</span><span class="step-text">在上方输入框粘贴链接，一行一个</span></div>' +
@@ -973,12 +1006,33 @@ function bindEvents() {
 
   // 使用说明
   $('guideBtn').addEventListener('click', showGuide);
+
+  // 名称/副标题输入变化时同步 state
+  $('siteTitle').addEventListener('input', function() {
+    state.siteTitle = this.value;
+    saveState();
+  });
+  $('siteSubtitle').addEventListener('input', function() {
+    state.siteSubtitle = this.value;
+    saveState();
+  });
 }
 
 // ===== 初始化 =====
 function init() {
+  // 尝试恢复持久化数据
+  var restored = loadState();
+  if (restored) {
+    $('siteTitle').value = state.siteTitle;
+    $('siteSubtitle').value = state.siteSubtitle;
+    $('linkCount').textContent = state.parsedCount + ' 个链接已解析';
+  }
   renderThemes();
   bindEvents();
+  if (restored) {
+    renderClassifiedData();
+    updatePreviewColors();
+  }
 }
 
 if (document.readyState === 'loading') {

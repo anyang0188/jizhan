@@ -1,12 +1,13 @@
 // Service Worker - 集站 PWA 离线缓存
-var CACHE_NAME = 'jizhan-pwa-v5';
+// 版本号与 app.js 中的 VERSION 同步
+var CACHE_NAME = 'jizhan-pwa-' + (typeof VERSION !== 'undefined' ? VERSION : 'v5');
 var CACHE_FILES = [
   './',
   './index.html',
-  './css/style.css?v=5',
-  './js/classifier.js?v=5',
-  './js/htmlGenerator.js?v=5',
-  './js/app.js?v=5',
+  './css/style.css',
+  './js/classifier.js',
+  './js/htmlGenerator.js',
+  './js/app.js',
   './manifest.json',
   './icons/icon.svg'
 ];

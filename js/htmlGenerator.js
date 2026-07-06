@@ -51,7 +51,7 @@ function generateAppJS() {
         html += '<a href="' + escapeAttr(site.url) + '" target="_blank" class="nav-card" data-search-text="' +
           escapeAttr(site.name + ' ' + site.desc + ' ' + section.category) + '">';
         html += '<div class="nav-card-icon">';
-        html += '<img src="https://www.google.com/s2/favicons?domain=' + escapeAttr(domain) + '&sz=64" alt="" class="nav-favicon" onerror="this.style.display=\'none\';this.parentNode.textContent=\'' + site.icon + '\'" loading="lazy">';
+        html += '<img src="https://www.google.com/s2/favicons?domain=' + escapeAttr(domain) + '&sz=64" alt="" class="nav-favicon" onerror="this.style.display=\'none\'" onload="this.src=\'\'" loading="lazy">';
         html += '<span class="nav-fallback">' + site.icon + '</span>';
         html += '</div>';
         html += '<div class="nav-card-info">';
@@ -64,6 +64,15 @@ function generateAppJS() {
       html += '</div></div>';
     });
     navContainer.innerHTML = html;
+    // 检测所有 favicon 是否加载成功
+    setTimeout(function() {
+      var favicons = navContainer.querySelectorAll('.nav-favicon');
+      for (var i = 0; i < favicons.length; i++) {
+        if (!favicons[i].complete || favicons[i].naturalWidth === 0) {
+          favicons[i].style.display = 'none';
+        }
+      }
+    }, 2000);
   }
 
   function getDomain(url) {

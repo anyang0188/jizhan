@@ -997,3 +997,30 @@ body {
   .panel-input { width: 400px; padding: 24px; }
   .panel-results { padding: 24px; }
 }
+
+/* ========================================
+   PWA Install Button
+   ======================================== */
+.pwa-install-btn {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(79,110,247,0.3);
+  z-index: 1000;
+  transition: all 0.2s;
+  animation: slideUp 0.3s ease;
+}
+.pwa-install-btn:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 6px 24px rgba(79,110,247,0.4);
+  transform: translateX(-50%) translateY(-2px);
+}
