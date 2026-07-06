@@ -603,6 +603,15 @@ body {
 }
 .move-cat-item:hover { background: var(--primary-light); }
 
+.move-cat-item.move-cat-delete:hover {
+  background: #FEF2F2;
+}
+
+.move-cat-item.move-cat-delete:hover .move-cat-icon,
+.move-cat-item.move-cat-delete:hover .move-cat-name {
+  color: #DC2626 !important;
+}
+
 .move-cat-icon { font-size: 16px; }
 .move-cat-name { font-size: 14px; font-weight: 500; }
 

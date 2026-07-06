@@ -355,7 +355,7 @@ function renderClassifiedData() {
       html += '<div class="cat-site">';
       html += '<span class="site-icon">' + site.icon + '</span>';
       html += '<span class="site-name editable" data-act="editSiteName" data-cat="' + catIndex + '" data-site="' + siteIndex + '">' + escapeHtml(site.name) + '</span>';
-      html += '<span class="site-move" data-act="moveSite" data-cat="' + catIndex + '" data-site="' + siteIndex + '">⇅</span>';
+      html += '<span class="site-action-btn" data-act="siteAction" data-cat="' + catIndex + '" data-site="' + siteIndex + '">⇅</span>';
       html += '</div>';
     });
     html += '</div></div>';
@@ -376,7 +376,7 @@ function handleCategoryAction(e) {
   if (act === 'editIcon') openIconPicker(catIndex);
   else if (act === 'editName') editCategoryName(catIndex);
   else if (act === 'editSiteName') editSiteName(catIndex, siteIndex);
-  else if (act === 'moveSite') openMovePicker(catIndex, siteIndex);
+  else if (act === 'siteAction') openActionPicker(catIndex, siteIndex);
   else if (act === 'moveCat') moveCategory(parseInt(this.getAttribute('data-index')), this.getAttribute('data-dir'));
 }
 
@@ -454,16 +454,16 @@ function editSiteName(catIndex, siteIndex) {
   });
 }
 
-// ===== 移动网站 =====
-function openMovePicker(catIndex, siteIndex) {
+// ===== 网站操作面板（移动/删除） =====
+function openActionPicker(catIndex, siteIndex) {
   var data = state.classifiedData;
+  var site = data[catIndex].sites[siteIndex];
   var catList = [];
   for (var i = 0; i < data.length; i++) {
     if (i !== catIndex) {
       catList.push({ name: data[i].categoryName, icon: data[i].categoryIcon });
     }
   }
-  if (catList.length === 0) { showToast('没有其他分类可移动'); return; }
 
   state.moveCatIndex = catIndex;
   state.moveSiteIndex = siteIndex;
@@ -472,20 +472,57 @@ function openMovePicker(catIndex, siteIndex) {
   catList.forEach(function(cat, idx) {
     html += '<div class="move-cat-item" data-index="' + idx + '">' +
       '<span class="move-cat-icon">' + cat.icon + '</span>' +
-      '<span class="move-cat-name">' + escapeHtml(cat.name) + '</span>' +
+      '<span class="move-cat-name">移动到「' + escapeHtml(cat.name) + '」</span>' +
     '</div>';
   });
+  // 删除选项
+  html += '<div class="move-cat-item move-cat-delete" data-act="delete">' +
+    '<span class="move-cat-icon" style="color: #EF4444;">🗑</span>' +
+    '<span class="move-cat-name" style="color: #EF4444;">删除「' + escapeHtml(site.name) + '」</span>' +
+  '</div>';
 
   showModal({
-    title: '📂 移动到分类',
+    title: '📂 站点操作',
     bodyHtml: html,
     onClose: function() { state.moveCatIndex = -1; state.moveSiteIndex = -1; }
   });
 
-  document.querySelectorAll('.move-cat-item').forEach(function(item) {
+  // 移动选项
+  document.querySelectorAll('.move-cat-item[data-index]').forEach(function(item) {
     item.addEventListener('click', function() {
       confirmMoveSite(parseInt(this.getAttribute('data-index')));
     });
+  });
+  // 删除选项
+  var deleteBtn = document.querySelector('.move-cat-item[data-act="delete"]');
+  if (deleteBtn) {
+    deleteBtn.addEventListener('click', function() {
+      confirmDeleteSite();
+    });
+  }
+}
+
+function confirmDeleteSite() {
+  var catIndex = state.moveCatIndex;
+  var siteIndex = state.moveSiteIndex;
+  var siteName = state.classifiedData[catIndex].sites[siteIndex].name;
+
+  showConfirm('确认删除', '确定要删除「' + siteName + '」吗？', {
+    confirmText: '删除',
+    cancelText: '取消'
+  }).then(function(confirmed) {
+    if (!confirmed) return;
+    var data = state.classifiedData;
+    data[catIndex].sites.splice(siteIndex, 1);
+    if (data[catIndex].sites.length === 0) {
+      data.splice(catIndex, 1);
+    }
+    state.moveCatIndex = -1;
+    state.moveSiteIndex = -1;
+    closeModal();
+    renderClassifiedData();
+    saveState();
+    showToast('已删除「' + siteName + '」', 'success');
   });
 }
 
@@ -906,7 +943,7 @@ function showGuide() {
       '<div class="feature-item"><span class="feature-icon">🎯</span><span class="feature-text">点击分类图标 → 更换图标（42 个可选）</span></div>' +
       '<div class="feature-item"><span class="feature-icon">✏️</span><span class="feature-text">点击分类名称 → 修改分类名（同名自动合并）</span></div>' +
       '<div class="feature-item"><span class="feature-icon">📝</span><span class="feature-text">点击网站名称 → 修改显示名（导出时用）</span></div>' +
-      '<div class="feature-item"><span class="feature-icon">⇅</span><span class="feature-text">点击 ⇅ 按钮 → 移动到其他分类</span></div>' +
+      '<div class="feature-item"><span class="feature-icon">⇅</span><span class="feature-text">点击 ⇅ 按钮 → 弹出操作面板，可选择移动到其它分类或删除站点</span></div>' +
       '<div class="feature-item"><span class="feature-icon">↑↓</span><span class="feature-text">点击 ↑↓ 按钮 → 调整分类顺序</span></div>' +
       '<div class="feature-item"><span class="feature-icon">🎨</span><span class="feature-text">6 套背景主题 + 自定义取色器</span></div>' +
 
@@ -923,6 +960,9 @@ function showGuide() {
       '<div class="format-example"><span class="format-label">格式2：链接 + 中文名</span><span class="format-code">https://chat.deepseek.com DeepSeek AI助手</span></div>' +
       '<div class="format-example"><span class="format-label">格式3：自定义分类</span><span class="format-code">https://www.bilibili.com/ 哔哩哔哩（视频）</span></div>' +
       '<div class="format-note">💡 用括号标注分类名，如（视频）、（工具），会自动创建新分类</div>' +
+
+      '<div class="section-title">🗑 删除站点</div>' +
+      '<div class="note-item"><span class="note-icon">🗑</span><span class="note-text">点击站点右侧 ⇅ 按钮，在弹出面板中选择「删除」，确认后即刻移除。若分类下所有站点均被删除，该分类将自动移除。</span></div>' +
 
       '<div class="section-title">⚠️ 注意事项</div>' +
       '<div class="note-item"><span class="note-icon">📱</span><span class="note-text">生成的是静态 HTML 文件，可在任何浏览器打开</span></div>' +
