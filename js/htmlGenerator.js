@@ -56,11 +56,12 @@ function generateAppJS() {
       html += '<div class="nav-grid">';
       section.sites.forEach(function(site) {
         var domain = getDomain(site.url);
+        var siteIcon = site.icon || section.categoryIcon;
         html += '<a href="' + escapeAttr(site.url) + '" target="_blank" class="nav-card" data-search-text="' +
           escapeAttr(site.name + ' ' + site.desc + ' ' + section.category) + '">';
         html += '<div class="nav-card-icon">';
         html += '<img src="https://www.google.com/s2/favicons?domain=' + escapeAttr(domain) + '&sz=64" alt="" class="nav-favicon" onerror="this.style.display=&quot;none&quot;" onload="this.src=&quot;&quot;" loading="lazy">';
-        html += '<span class="nav-fallback">' + site.icon + '</span>';
+        html += '<span class="nav-fallback">' + siteIcon + '</span>';
         html += '</div>';
         html += '<div class="nav-card-info">';
         html += '<div class="nav-card-name">' + site.name + '</div>';
