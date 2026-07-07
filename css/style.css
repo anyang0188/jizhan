@@ -204,6 +204,32 @@ body {
   gap: 4px;
 }
 
+.input-group-theme {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+/* 名称+副标题双列布局 */
+.input-row-double {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.input-half {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.input-half:first-child {
+  flex: 0 0 62%;
+}
+.input-half:last-child {
+  flex: 0 0 34%;
+}
+
 .input-label {
   font-size: 12px;
   font-weight: 600;
@@ -228,23 +254,25 @@ body {
   box-shadow: 0 0 0 3px var(--primary-light);
 }
 
-/* Theme Picker */
+/* Theme Picker - 单行排列 */
 .theme-picker {
   display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
+  gap: 6px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
 }
 
 .theme-item {
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: 20px;
   cursor: pointer;
   border: 1.5px solid transparent;
   transition: all var(--transition);
   background: var(--bg);
+  flex-shrink: 0;
 }
 .theme-item:hover { opacity: 0.85; }
 .theme-picker-btn:hover { opacity: 0.9; }
@@ -254,8 +282,8 @@ body {
 }
 
 .theme-color {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   display: flex;
   align-items: center;

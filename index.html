@@ -44,20 +44,20 @@
     <!-- ===== Left Panel: Input ===== -->
     <section class="panel panel-input">
 
-      <!-- 导航站名称 -->
-      <div class="input-group">
-        <label class="input-label" for="siteTitle">导航站名称</label>
-        <input class="input-field" id="siteTitle" placeholder="输入导航站名称" value="我的导航站">
-      </div>
-
-      <!-- 副标题 -->
-      <div class="input-group">
-        <label class="input-label" for="siteSubtitle">副标题（可选）</label>
-        <input class="input-field" id="siteSubtitle" placeholder="给导航站加一句描述" value="">
+      <!-- 名称+副标题 -->
+      <div class="input-row-double">
+        <div class="input-half">
+          <label class="input-label" for="siteTitle">导航站名称</label>
+          <input class="input-field" id="siteTitle" placeholder="输入导航站名称" value="我的导航站">
+        </div>
+        <div class="input-half">
+          <label class="input-label" for="siteSubtitle">副标题（可选）</label>
+          <input class="input-field" id="siteSubtitle" placeholder="给导航站加一句描述" value="">
+        </div>
       </div>
 
       <!-- 主题 -->
-      <div class="input-group">
+      <div class="input-group input-group-theme">
         <label class="input-label">背景主题</label>
         <div class="theme-picker" id="themePicker"></div>
       </div>

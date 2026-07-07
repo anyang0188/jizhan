@@ -27,11 +27,16 @@ var THEMES = [
       '--text-secondary': '#4a7a5e', '--border': '#d4e8d4', '--shadow': '0 2px 12px rgba(26,61,46,0.08)',
       '--header-bg': 'linear-gradient(135deg, #276749 0%, #68d391 100%)', '--header-text': '#ffffff' },
     preview: { bg: '#f0f7f0', cardBg: '#ffffff', text: '#1a3d2e' } },
-  { id: 'aurora', name: '极光紫', color: '#6b46c1',
-    css: { '--bg': '#f5f0ff', '--card-bg': '#ffffff', '--text': '#2d1a5d',
-      '--text-secondary': '#7a4ab8', '--border': '#e0ccff', '--shadow': '0 2px 12px rgba(45,26,93,0.08)',
-      '--header-bg': 'linear-gradient(135deg, #6b46c1 0%, #b794f4 100%)', '--header-text': '#ffffff' },
-    preview: { bg: '#f5f0ff', cardBg: '#ffffff', text: '#2d1a5d' } }
+  { id: 'dark', name: '暗夜黑', color: '#111111',
+    css: { '--bg': '#0a0a0a', '--card-bg': '#1a1a1a', '--text': '#e0e0e0',
+      '--text-secondary': '#a0a0a0', '--border': '#2a2a2a', '--shadow': '0 2px 12px rgba(0,0,0,0.3)',
+      '--header-bg': 'linear-gradient(135deg, #333333 0%, #1a1a1a 100%)', '--header-text': '#ffffff' },
+    preview: { bg: '#0a0a0a', cardBg: '#1a1a1a', text: '#e0e0e0' } },
+  { id: 'custom', name: '自定义', color: '#4F6EF7',
+    css: { '--bg': '#F0F4FF', '--card-bg': '#FFFFFF', '--text': '#2C3E50',
+      '--text-secondary': '#7F8C9B', '--border': '#E8ECF1', '--shadow': '0 2px 12px rgba(0,0,0,0.06)',
+      '--header-bg': 'linear-gradient(135deg, var(--primary) 0%, #6C8CFF 100%)', '--header-text': '#ffffff' },
+    preview: { bg: '#F0F4FF', cardBg: '#FFFFFF', text: '#2C3E50' } }
 ];
 
 // ===== 状态 =====
@@ -360,10 +365,21 @@ function confirmColor() {
   var theme = generateCustomTheme(customThemeColor);
   state.currentTheme = 'custom';
   state.themeStyle = theme.preview;
+  applyThemeCSS(theme.css);
   closeColorPicker();
   renderThemes();
   updatePreviewColors();
   saveState();
+}
+
+
+function applyThemeCSS(cssObj) {
+  var root = document.documentElement.style;
+  for (var key in cssObj) {
+    if (cssObj.hasOwnProperty(key)) {
+      root.setProperty('--' + key, cssObj[key]);
+    }
+  }
 }
 
 // ===== 主题渲染 =====
@@ -403,10 +419,18 @@ function renderThemes() {
         openColorPicker();
         return;
       }
-      var theme;
-      theme = THEMES.find(function(t) { return t.id === themeId; }) || THEMES[0];
+      var theme = THEMES.find(function(t) { return t.id === themeId; });
+      if (!theme) return;
       state.currentTheme = themeId;
       state.themeStyle = theme.preview;
+      // 自定义主题更新 CSS
+      if (themeId === 'custom' && customThemeColor) {
+        var ct = generateCustomTheme(customThemeColor);
+        state.themeStyle = ct.preview;
+        applyThemeCSS(ct.css);
+      } else {
+        applyThemeCSS(theme.css);
+      }
       renderThemes();
       updatePreviewColors();
       saveState();
@@ -1794,6 +1818,14 @@ function init() {
   renderThemes();
   bindEvents();
   if (restored) {
+    // 恢复主题 CSS
+    var theme = THEMES.find(function(t) { return t.id === state.currentTheme; });
+    if (theme) {
+      applyThemeCSS(theme.css);
+    } else if (customThemeColor) {
+      var ct = generateCustomTheme(customThemeColor);
+      applyThemeCSS(ct.css);
+    }
     renderClassifiedData();
     updatePreviewColors();
     // 页面恢复时，加载缓存
