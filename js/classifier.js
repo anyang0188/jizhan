@@ -81,15 +81,15 @@ const CATEGORY_RULES = [
 
 function extractUrls(text) {
   if (!text) return [];
-  const urlRegex = /(https?:\/\/|www\.)[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]|[a-zA-Z0-9][-a-zA-Z0-9]*\.[a-zA-Z]{2,}[^ \t\n\r,;)]+/g;
+  const urlRegex = /(https?:\/\/|www\.)[^\s,;|]+/g;
   let urls = text.match(urlRegex) || [];
   urls = urls.map(url => {
     url = url.replace(/[.,;!?)]+$/, '');
     if (!url.match(/^https?:\/\//)) {
       url = 'https://' + url;
     }
-    try { new URL(url); return url; } catch (e) { return null; }
-  }).filter(Boolean);
+    return url;
+  });
   return urls;
 }
 
@@ -251,7 +251,7 @@ function parseLinks(text) {
     let title = '';
     let desc = '';
 
-    const urlMatch = line.match(/(https?:\/\/[^\s|]+|[a-zA-Z0-9][a-zA-Z0-9-]*\.[a-zA-Z]{2,}[^\s|]*)/);
+    const urlMatch = line.match(/(https?:\/\/[^\s|]+|www\.[^\s|]+)/);
     if (!urlMatch) continue;
 
     url = urlMatch[0].replace(/[.,;!?)]+$/, '');
