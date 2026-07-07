@@ -447,7 +447,8 @@ function collectFailedUrls() {
   state.classifiedData.forEach(function(cat) {
     cat.sites.forEach(function(site) {
       var st = LinkChecker.getStatus(site.url);
-      if (st === 'fail' || st === 'unknown') {
+      // fail/unknown/null(未检测) 都视为异常
+      if (st !== 'ok') {
         failed.push(site.url);
       }
     });
@@ -527,7 +528,7 @@ function renderCheckToolbar(totalSites) {
   var filters = [
     { key: 'all', label: '全部 (' + totalSites + ')' },
     { key: 'ok', label: '正常 (' + stats.ok + ')' },
-    { key: 'fail', label: '异常 (' + (stats.fail + stats.unknown) + ')' }
+    { key: 'fail', label: '异常 (' + (stats.fail + stats.unknown + unchecked) + ')' }
   ];
   filters.forEach(function(f) {
     var cls = state.linkCheckFilter === f.key ? 'check-filter-btn check-filter-active' : 'check-filter-btn';
@@ -536,6 +537,9 @@ function renderCheckToolbar(totalSites) {
 
   var checkBtnText = state.linkChecking ? '检测中…' : '批量校验';
   var checkBtnCls = state.linkChecking ? 'btn-check check-disabled' : 'btn-check';
+
+  // 未检测数量
+  var unchecked = totalSites - stats.total;
 
   toolbar.innerHTML =
     '<div class="check-toolbar">' +
@@ -582,8 +586,12 @@ function applyFilter() {
     sites.forEach(function(siteEl) {
       var dot = siteEl.querySelector('.status-dot');
       if (!dot) {
-        // 未检测状态，根据过滤器决定是否显示
+        // 未检测状态
         if (state.linkCheckFilter === 'all') {
+          siteEl.style.display = '';
+          visibleCount++;
+        } else if (state.linkCheckFilter === 'fail') {
+          // 未检测视为异常
           siteEl.style.display = '';
           visibleCount++;
         } else {
@@ -953,7 +961,7 @@ function fillSample() {
   updateLinkCount();
   showToast('已填入 ' + SAMPLE_LINKS.length + ' 个示例链接');
   
-  // 填入示例后自动预校验
+  // 填充示例后自动预校验
   setTimeout(function() {
     var urls = SAMPLE_LINKS.map(function(line) {
       var m = line.match(/(https?:\/\/[^\s]+)/);
@@ -1625,6 +1633,17 @@ function init() {
   if (restored) {
     renderClassifiedData();
     updatePreviewColors();
+    // 页面恢复时，加载缓存
+    LinkChecker.checkUrls([], function() {}, function() {
+      // 缓存加载完成，重新渲染显示状态圆点
+      renderClassifiedData();
+    });
+    // 如果缓存中没有当前页面的URL，自动触发预校验
+    var currentUrls = getAllUrls();
+    var stats = LinkChecker.getStats(currentUrls);
+    if (stats.total === 0 && currentUrls.length > 0) {
+      startPreCheck(currentUrls);
+    }
   }
 
   // 初始化 HSL 取色器
