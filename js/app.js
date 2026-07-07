@@ -45,7 +45,10 @@ var state = {
   themeStyle: { bg: '#F5F6FA', cardBg: '#FFFFFF', text: '#2C3E50' },
   editingCategoryIndex: -1,
   moveCatIndex: -1,
-  moveSiteIndex: -1
+  moveSiteIndex: -1,
+  // 链接检测筛选
+  linkCheckFilter: 'all', // 'all' | 'ok' | 'fail'
+  linkChecking: false
 };
 
 // ===== localStorage 持久化 =====
@@ -429,6 +432,29 @@ function updatePreviewColors() {
 }
 
 // ===== 分类预览渲染 =====
+function getAllUrls() {
+  var urls = [];
+  state.classifiedData.forEach(function(cat) {
+    cat.sites.forEach(function(site) {
+      if (site.url) urls.push(site.url);
+    });
+  });
+  return urls;
+}
+
+function collectFailedUrls() {
+  var failed = [];
+  state.classifiedData.forEach(function(cat) {
+    cat.sites.forEach(function(site) {
+      var st = LinkChecker.getStatus(site.url);
+      if (st === 'fail' || st === 'unknown') {
+        failed.push(site.url);
+      }
+    });
+  });
+  return failed;
+}
+
 function renderClassifiedData() {
   var data = state.classifiedData;
   if (data.length === 0) {
@@ -447,6 +473,9 @@ function renderClassifiedData() {
   $('previewCard').style.background = state.themeStyle.cardBg;
   $('previewTitle').style.color = state.themeStyle.text;
 
+  // 渲染检测工具栏
+  renderCheckToolbar(totalSites);
+
   var html = '';
   data.forEach(function(cat, catIndex) {
     html += '<div class="category-item">';
@@ -455,15 +484,25 @@ function renderClassifiedData() {
     html += '<span class="cat-name editable" style="color:' + state.themeStyle.text + ';" data-act="editName" data-index="' + catIndex + '">' + escapeHtml(cat.categoryName) + '</span>';
     html += '<span class="cat-count">' + cat.sites.length + ' 个</span>';
     html += '<div class="cat-actions">';
-    if (catIndex > 0) html += '<span class="move-btn" data-act="moveCat" data-index="' + catIndex + '" data-dir="up">↑</span>';
-    if (catIndex < data.length - 1) html += '<span class="move-btn" data-act="moveCat" data-index="' + catIndex + '" data-dir="down">↓</span>';
+    if (catIndex > 0) html += '<span class="move-btn" data-act="moveCat" data-index="' + catIndex + '" data-dir="up">&#8593;</span>';
+    if (catIndex < data.length - 1) html += '<span class="move-btn" data-act="moveCat" data-index="' + catIndex + '" data-dir="down">&#8595;</span>';
     html += '</div></div>';
     html += '<div class="cat-sites">';
     cat.sites.forEach(function(site, siteIndex) {
+      var status = LinkChecker.getStatus(site.url);
+      var dotHtml = '';
+      if (status === 'ok') {
+        dotHtml = '<span class="status-dot status-ok" title="正常"></span>';
+      } else if (status === 'fail') {
+        dotHtml = '<span class="status-dot status-fail" title="失效"></span>';
+      } else if (status === 'unknown') {
+        dotHtml = '<span class="status-dot status-unknown" title="无法检测"></span>';
+      }
       html += '<div class="cat-site">';
+      html += dotHtml;
       html += '<span class="site-icon editable" data-act="editSiteIcon" data-cat="' + catIndex + '" data-site="' + siteIndex + '">' + site.icon + '</span>';
       html += '<span class="site-name editable" data-act="editSiteName" data-cat="' + catIndex + '" data-site="' + siteIndex + '">' + escapeHtml(site.name) + '</span>';
-      html += '<span class="site-action-btn" data-act="siteAction" data-cat="' + catIndex + '" data-site="' + siteIndex + '">⇅</span>';
+      html += '<span class="site-action-btn" data-act="siteAction" data-cat="' + catIndex + '" data-site="' + siteIndex + '">&#8645;</span>';
       html += '</div>';
     });
     html += '</div></div>';
@@ -474,6 +513,165 @@ function renderClassifiedData() {
   $('categoryList').querySelectorAll('[data-act]').forEach(function(el) {
     el.addEventListener('click', handleCategoryAction);
   });
+}
+
+// ===== 检测工具栏渲染 =====
+function renderCheckToolbar(totalSites) {
+  var toolbar = $('checkToolbar');
+  if (!toolbar) return;
+
+  var stats = LinkChecker.getStats();
+  var filterBtns = '';
+  var filters = [
+    { key: 'all', label: '全部 (' + totalSites + ')' },
+    { key: 'ok', label: '正常 (' + stats.ok + ')' },
+    { key: 'fail', label: '异常 (' + (stats.fail + stats.unknown) + ')' }
+  ];
+  filters.forEach(function(f) {
+    var cls = state.linkCheckFilter === f.key ? 'check-filter-btn check-filter-active' : 'check-filter-btn';
+    filterBtns += '<button class="' + cls + '" data-filter="' + f.key + '">' + f.label + '</button>';
+  });
+
+  var checkBtnText = state.linkChecking ? '检测中…' : '批量校验';
+  var checkBtnCls = state.linkChecking ? 'btn-check check-disabled' : 'btn-check';
+
+  toolbar.innerHTML =
+    '<div class="check-toolbar">' +
+      '<span class="check-info">🔗 链接健康检测</span>' +
+      '<button class="' + checkBtnCls + '" id="batchCheckBtn">' + checkBtnText + '</button>' +
+      '<div class="check-progress" id="checkProgress" style="display:none;">' +
+        '<div class="check-progress-bar" id="checkProgressBar"></div>' +
+        '<span class="check-progress-text" id="checkProgressText">0%</span>' +
+      '</div>' +
+      '<div class="check-filters">' + filterBtns + '</div>' +
+      (stats.fail > 0 ? '<button class="btn-copy-failed" id="copyFailedBtn">📋 复制失效链接</button>' : '') +
+    '</div>';
+
+  // 批量校验按钮
+  var batchBtn = toolbar.querySelector('#batchCheckBtn');
+  if (batchBtn) {
+    batchBtn.addEventListener('click', function() {
+      if (state.linkChecking) return;
+      startBatchCheck();
+    });
+  }
+
+  // 复制失效链接按钮
+  var copyBtn = toolbar.querySelector('#copyFailedBtn');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', copyFailedUrls);
+  }
+
+  // 筛选按钮
+  toolbar.querySelectorAll('.check-filter-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      state.linkCheckFilter = this.getAttribute('data-filter');
+      renderCheckToolbar(totalSites);
+      applyFilter();
+    });
+  });
+}
+
+function applyFilter() {
+  var items = document.querySelectorAll('.category-item');
+  items.forEach(function(item) {
+    var sites = item.querySelectorAll('.cat-site');
+    var visibleCount = 0;
+    sites.forEach(function(siteEl) {
+      var dot = siteEl.querySelector('.status-dot');
+      if (!dot) {
+        // 未检测状态，根据过滤器决定是否显示
+        if (state.linkCheckFilter === 'all') {
+          siteEl.style.display = '';
+          visibleCount++;
+        } else {
+          siteEl.style.display = 'none';
+        }
+        return;
+      }
+      var cls = dot.className;
+      var show = false;
+      if (state.linkCheckFilter === 'all') {
+        show = true;
+      } else if (state.linkCheckFilter === 'ok' && cls.indexOf('status-ok') !== -1) {
+        show = true;
+      } else if (state.linkCheckFilter === 'fail' && (cls.indexOf('status-fail') !== -1 || cls.indexOf('status-unknown') !== -1)) {
+        show = true;
+      }
+      siteEl.style.display = show ? '' : 'none';
+      if (show) visibleCount++;
+    });
+    // 如果分类下所有站点都被过滤了，隐藏该分类
+    var header = item.querySelector('.cat-header');
+    if (header) {
+      header.style.display = visibleCount > 0 ? '' : 'none';
+    }
+    var sitesWrap = item.querySelector('.cat-sites');
+    if (sitesWrap) {
+      sitesWrap.style.display = visibleCount > 0 ? '' : 'none';
+    }
+  });
+}
+
+function startBatchCheck() {
+  var urls = getAllUrls();
+  if (urls.length === 0) {
+    showToast('没有可检测的链接', 'error');
+    return;
+  }
+
+  state.linkChecking = true;
+
+  LinkChecker.checkUrls(urls, function(current, total) {
+    var pct = Math.round((current / total) * 100);
+    var progressBar = document.getElementById('checkProgressBar');
+    var progressText = document.getElementById('checkProgressText');
+    var progressWrap = document.getElementById('checkProgress');
+    if (progressBar) progressBar.style.width = pct + '%';
+    if (progressText) progressText.textContent = pct + '%';
+    if (progressWrap) progressWrap.style.display = 'block';
+  }, function() {
+    state.linkChecking = false;
+    var progressWrap = document.getElementById('checkProgress');
+    if (progressWrap) progressWrap.style.display = 'none';
+    renderClassifiedData();
+    saveState();
+    showToast('检测完成！正常 ' + LinkChecker.getStats().ok + ' 个，异常 ' + (LinkChecker.getStats().fail + LinkChecker.getStats().unknown) + ' 个', 'success');
+  });
+}
+
+/**
+ * 预校验（导入后自动调用，不阻塞UI，不显示进度条）
+ */
+function startPreCheck(urls) {
+  var done = 0;
+  var total = urls.length;
+
+  LinkChecker.checkUrls(urls, function() {}, function() {
+    // 预校验完成，静默刷新分类预览（显示红绿点）
+    if (state.hasParsed) {
+      renderClassifiedData();
+      saveState();
+    }
+  });
+}
+
+function copyFailedUrls() {
+  var failed = collectFailedUrls();
+  if (failed.length === 0) {
+    showToast('没有失效链接', 'success');
+    return;
+  }
+  var text = failed.join('\n');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      showToast('已复制 ' + failed.length + ' 个失效链接', 'success');
+    }).catch(function() {
+      fallbackCopy(text);
+    });
+  } else {
+    fallbackCopy(text);
+  }
 }
 
 function handleCategoryAction(e) {
@@ -751,6 +949,17 @@ function fillSample() {
   $('formatTip').style.display = 'none';
   updateLinkCount();
   showToast('已填入 ' + SAMPLE_LINKS.length + ' 个示例链接');
+  
+  // 填入示例后自动预校验
+  setTimeout(function() {
+    var urls = SAMPLE_LINKS.map(function(line) {
+      var m = line.match(/(https?:\/\/[^\s]+)/);
+      return m ? m[1] : '';
+    }).filter(Boolean);
+    if (urls.length > 0) {
+      startPreCheck(urls);
+    }
+  }, 500);
 }
 
 // ===== 实时更新链接计数（防抖） =====
@@ -858,6 +1067,19 @@ function onParse() {
     updatePreviewColors();
     saveState();
     showToast('解析成功', 'success');
+
+    // 解析后自动预校验
+    setTimeout(function() {
+      var urls = [];
+      state.classifiedData.forEach(function(cat) {
+        cat.sites.forEach(function(site) {
+          if (site.url) urls.push(site.url);
+        });
+      });
+      if (urls.length > 0) {
+        startPreCheck(urls);
+      }
+    }, 500);
   }, 150);
 }
 
@@ -1199,6 +1421,14 @@ function importBookmarks(file) {
     doc = null;
     
     showToast('导入成功，共 ' + uniqueLinks.length + ' 个链接');
+    
+    // 导入后自动预校验
+    setTimeout(function() {
+      var urls = uniqueLinks.map(function(l) { return l.url; });
+      if (urls.length > 0) {
+        startPreCheck(urls);
+      }
+    }, 500);
   };
   
   reader.readAsText(file, 'UTF-8');
