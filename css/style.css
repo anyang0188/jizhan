@@ -126,6 +126,8 @@ body {
   cursor: pointer;
   transition: all var(--transition);
   font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .header-guide:hover {
   background: var(--primary-light);
@@ -1119,6 +1121,24 @@ body {
   .input-field { height: 36px; }
   .link-input { height: 120px; }
   .empty-state { padding: 40px 16px; }
+
+  /* 手机端 header 调整 */
+  .header-inner {
+    grid-template-columns: 1fr auto 1fr;
+  }
+  .header-guide span:last-child {
+    display: none;
+  }
+  .header-guide {
+    padding: 8px;
+    min-width: auto;
+  }
+  .brand-name {
+    font-size: 28px;
+  }
+  .brand-icon {
+    font-size: 28px;
+  }
 }
 
 /* ========================================
