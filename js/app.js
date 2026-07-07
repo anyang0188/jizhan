@@ -549,12 +549,20 @@ function renderCheckToolbar(totalSites) {
   var checkBtnText = state.linkChecking ? '检测中…' : '批量校验';
   var checkBtnCls = state.linkChecking ? 'btn-check check-disabled' : 'btn-check';
 
-  var actionBtnsHtml = '';
-  if (sFail + sUnknown + unchecked > 0) {
-    actionBtnsHtml =
-      '<button class="btn-action btn-copy" id="copyFailedBtn">📋 复制</button>' +
-      '<button class="btn-action btn-isolate" id="isolateFailedBtn">隔离</button>' +
-      '<button class="btn-action btn-remove" id="removeFailedBtn">清理</button>';
+  var hasFailed = (sFail + sUnknown + unchecked) > 0;
+  var actionHtml = '';
+  if (hasFailed) {
+    actionHtml =
+      '<div class="check-row-bot">' +
+        '<button class="btn-action btn-copy" id="copyFailedBtn">📋 复制失效链接</button>' +
+        '<div class="more-dropdown" id="moreDropdown">' +
+          '<button class="btn-more" id="moreBtn">⋯ 更多</button>' +
+          '<div class="more-menu" id="moreMenu">' +
+            '<div class="more-menu-item" id="isolateMenuItem">隔离异常</div>' +
+            '<div class="more-menu-item more-danger" id="removeMenuItem">清理异常</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
   }
 
   toolbar.innerHTML =
@@ -570,7 +578,7 @@ function renderCheckToolbar(totalSites) {
       '<div class="check-row-mid">' +
         '<div class="check-filters">' + filterBtns + '</div>' +
       '</div>' +
-      '<div class="check-row-bot">' + actionBtnsHtml + '</div>' +
+      actionHtml +
     '</div>';
 
   // 批量校验按钮
@@ -588,16 +596,46 @@ function renderCheckToolbar(totalSites) {
     copyBtn.addEventListener('click', copyFailedUrls);
   }
 
-  // 隔离异常按钮
-  var isolateBtn = toolbar.querySelector('#isolateFailedBtn');
-  if (isolateBtn) {
-    isolateBtn.addEventListener('click', isolateFailedSites);
+  // 更多下拉菜单开关
+  var moreBtn = toolbar.querySelector('#moreBtn');
+  var moreMenu = toolbar.querySelector('#moreMenu');
+  if (moreBtn && moreMenu) {
+    moreBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      moreMenu.classList.toggle('open');
+    });
+    // 点击外部关闭下拉菜单
+    document.addEventListener('click', function closeMenu(ev) {
+      if (!toolbar.contains(ev.target)) {
+        moreMenu.classList.remove('open');
+        document.removeEventListener('click', closeMenu);
+      }
+    });
   }
 
-  // 清理异常按钮
-  var removeBtn = toolbar.querySelector('#removeFailedBtn');
-  if (removeBtn) {
-    removeBtn.addEventListener('click', removeFailedSites);
+  // 隔离异常（从下拉菜单）
+  var isolateItem = toolbar.querySelector('#isolateMenuItem');
+  if (isolateItem) {
+    isolateItem.addEventListener('click', function() {
+      moreMenu.classList.remove('open');
+      isolateFailedSites();
+    });
+  }
+
+  // 清理异常（从下拉菜单，带确认弹窗）
+  var removeItem = toolbar.querySelector('#removeMenuItem');
+  if (removeItem) {
+    removeItem.addEventListener('click', function() {
+      moreMenu.classList.remove('open');
+      showConfirm('确认清理异常链接', '此操作将永久删除所有异常链接，删除后不可恢复。确定要继续吗？', {
+        confirmText: '确认清理',
+        cancelText: '取消'
+      }).then(function(confirmed) {
+        if (confirmed) {
+          removeFailedSites();
+        }
+      });
+    });
   }
 
   // 筛选按钮

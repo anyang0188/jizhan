@@ -651,11 +651,11 @@ body {
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 16px 18px;
+  padding: 12px 16px;
   margin-bottom: 8px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .check-row-top {
@@ -672,9 +672,9 @@ body {
 }
 
 .btn-check {
-  font-size: 12px;
-  padding: 4px 16px;
-  border-radius: 20px;
+  font-size: 11px;
+  padding: 3px 12px;
+  border-radius: 16px;
   border: 1px solid var(--primary);
   background: var(--primary-light);
   color: var(--primary);
@@ -710,31 +710,31 @@ body {
 .check-row-mid {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .check-filters {
   display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
+  gap: 5px;
+  flex-wrap: nowrap;
 }
 
 .check-row-bot {
   display: flex;
+  align-items: center;
   gap: 8px;
 }
 
 .btn-action {
-  flex: 1;
   font-size: 12px;
-  padding: 5px 8px;
+  padding: 5px 14px;
   border-radius: 6px;
   border: 1px solid var(--border);
   cursor: pointer;
   font-weight: 600;
   transition: all var(--transition);
   white-space: nowrap;
-  text-align: center;
+  flex: 1;
   min-width: 0;
 }
 
@@ -748,24 +748,65 @@ body {
   border-color: #FCA5A5;
 }
 
-.btn-isolate {
-  background: #FFFBEB;
-  color: #D97706;
-  border-color: #FBBF24;
-}
-.btn-isolate:hover {
-  background: #FBBF24;
-  color: #fff;
+/* 更多下拉按钮 */
+.more-dropdown {
+  position: relative;
+  flex-shrink: 0;
 }
 
-.btn-remove {
-  background: #FEF2F2;
-  color: #DC2626;
-  border-color: #FCA5A5;
+.btn-more {
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all var(--transition);
+  white-space: nowrap;
 }
-.btn-remove:hover {
-  background: #EF4444;
-  color: #fff;
+.btn-more:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.more-menu {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  right: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  min-width: 120px;
+  z-index: 200;
+  overflow: hidden;
+}
+.more-menu.open {
+  display: block;
+}
+
+.more-menu-item {
+  font-size: 12px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background var(--transition);
+  white-space: nowrap;
+  color: var(--text);
+}
+.more-menu-item:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+.more-menu-item.more-danger {
+  color: #DC2626;
+}
+.more-menu-item.more-danger:hover {
+  background: #FEF2F2;
+  color: #EF4444;
 }
 
 .check-filter-btn {
