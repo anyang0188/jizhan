@@ -375,26 +375,16 @@ function applyThemeCSS(cssObj) {
 // ===== 主题渲染 =====
 function renderThemes() {
   var html = '';
-  THEMES.forEach(function(t) {
     var active = state.currentTheme === t.id;
-    var borderColor = t.id === 'clean' ? 'border:1.5px solid #E5E7EB;' : '';
+    var isCustom = t.id === 'custom';
+    var bg = isCustom ? (customThemeColor || 'conic-gradient(red,yellow,lime,cyan,blue,magenta,red)') : t.color;
+    var border = isCustom ? '' : 'border:1.5px solid #E5E7EB;';
     html += '<div class="theme-item ' + (active ? 'theme-active' : '') + '" data-theme="' + t.id + '">' +
-      '<div class="theme-color" style="background:' + t.color + ';' + borderColor + '">' +
+      '<div class="theme-color" style="background:' + bg + ';' + border + '">' +
         '<span class="theme-icon">' + (active ? 'V' : '') + '</span>' +
       '</div>' +
       '<span class="theme-name">' + t.name + '</span>' +
     '</div>';
-  });
-  // 自定义主题按钮（有颜色时显示颜色，无颜色时显示彩虹渐变）
-  var ca = state.currentTheme === 'custom';
-  var customBg = customThemeColor || 'conic-gradient(red,yellow,lime,cyan,blue,magenta,red)';
-  var customStyle = customThemeColor ? 'background:' + customBg + ';' : 'background:' + customBg + ';';
-  html += '<div class="theme-item ' + (ca ? 'theme-active' : '') + '" data-theme="custom" data-custom="1">' +
-    '<div class="theme-color" style="' + customStyle + '">' +
-      '<span class="theme-icon">' + (ca ? 'V' : '') + '</span>' +
-    '</div>' +
-    '<span class="theme-name">\u81ea\u5b9a\u4e49</span>' +
-  '</div>';
 
   var picker = $('themePicker');
   picker.innerHTML = html;
@@ -1816,6 +1806,8 @@ function init() {
       var ct = generateCustomTheme(customThemeColor);
       applyThemeCSS(ct.css);
     }
+    // 恢复深色模式类
+    updateDarkModeClass();
     renderClassifiedData();
     updatePreviewColors();
     // 页面恢复时，加载缓存

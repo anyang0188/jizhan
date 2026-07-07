@@ -1645,3 +1645,220 @@ body {
 .color-btn-confirm:hover {
   background: var(--primary-hover, #3B5DE7);
 }
+
+/* ===== 暗夜黑主题全局适配 ===== */
+.theme-dark-mode {
+  --border-color: #333333;
+  --card-bg: #1a1a1a;
+  --card-border: #2a2a2a;
+  --input-bg: #222222;
+  --input-border: #333333;
+  --btn-border: #444444;
+  --filter-border: #333333;
+  --highlight-color: #6C8CFF;
+  --highlight-bg: rgba(108, 140, 255, 0.15);
+  --shadow-color: rgba(0, 0, 0, 0.5);
+}
+
+/* 卡片模块深色适配 */
+.theme-dark-mode .results-card,
+.theme-dark-mode .input-card,
+.theme-dark-mode .category-item,
+.theme-dark-mode .check-toolbar {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.theme-dark-mode .cat-header {
+  background: #222222;
+  border-bottom-color: #2a2a2a;
+}
+
+.theme-dark-mode .cat-site {
+  border-bottom-color: #222222;
+}
+
+.theme-dark-mode .cat-site:hover {
+  background: #252525;
+}
+
+/* 输入框深色适配 */
+.theme-dark-mode .input-field,
+.theme-dark-mode .link-input {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: #e0e0e0;
+}
+
+.theme-dark-mode .input-field:focus,
+.theme-dark-mode .link-input:focus {
+  border-color: var(--highlight-color);
+  box-shadow: 0 0 0 3px rgba(108, 140, 255, 0.2);
+}
+
+/* 按钮深色适配 */
+.theme-dark-mode .btn,
+.theme-dark-mode .btn-primary,
+.theme-dark-mode .btn-export,
+.theme-dark-mode .btn-reset {
+  border-color: var(--btn-border);
+  background: #222222;
+  color: #d0d0d0;
+}
+
+.theme-dark-mode .btn-check {
+  border-color: var(--highlight-color);
+  color: var(--highlight-color);
+  background: rgba(108, 140, 255, 0.1);
+}
+
+.theme-dark-mode .btn-check:hover:not(.check-disabled) {
+  background: var(--highlight-color);
+  color: #fff;
+}
+
+/* 筛选标签深色适配 */
+.theme-dark-mode .check-filter-btn {
+  border-color: var(--filter-border);
+  background: #222222;
+  color: #a0a0a0;
+}
+
+.theme-dark-mode .check-filter-active {
+  background: var(--highlight-color) !important;
+  color: #fff !important;
+  border-color: var(--highlight-color) !important;
+}
+
+/* 主题按钮深色适配 */
+.theme-dark-mode .theme-item {
+  background: #222222;
+  border-color: #333333;
+}
+
+.theme-dark-mode .theme-active {
+  border-color: var(--highlight-color);
+  background: rgba(108, 140, 255, 0.12);
+}
+
+.theme-dark-mode .theme-name {
+  color: #a0a0a0;
+}
+
+/* 模态框深色适配 */
+.theme-dark-mode .modal-overlay,
+.theme-dark-mode .modal-content,
+.theme-dark-mode .icon-picker-modal .modal-content {
+  background: #1a1a1a;
+  border-color: #2a2a2a;
+  color: #e0e0e0;
+}
+
+.theme-dark-mode .modal-header {
+  border-bottom-color: #2a2a2a;
+}
+
+.theme-dark-mode .modal-body {
+  color: #d0d0d0;
+}
+
+.theme-dark-mode .icon-item {
+  background: #222222;
+  color: #d0d0d0;
+}
+
+.theme-dark-mode .icon-item:hover {
+  background: #2a2a2a;
+}
+
+.theme-dark-mode .icon-item.icon-selected {
+  border-color: var(--highlight-color);
+  background: rgba(108, 140, 255, 0.12);
+}
+
+/* 下拉菜单深色适配 */
+.theme-dark-mode .more-menu {
+  background: #1a1a1a;
+  border-color: #2a2a2a;
+}
+
+.theme-dark-mode .more-menu-item {
+  color: #d0d0d0;
+}
+
+.theme-dark-mode .more-menu-item:hover {
+  background: rgba(108, 140, 255, 0.12);
+}
+
+/* 导出成功弹窗深色适配 */
+.theme-dark-mode .export-success-modal {
+  background: #1a1a1a;
+  border-color: #2a2a2a;
+}
+
+.theme-dark-mode .export-tabs button {
+  background: #222222;
+  color: #a0a0a0;
+  border-color: #333333;
+}
+
+.theme-dark-mode .export-tabs button.active {
+  background: var(--highlight-color);
+  color: #fff;
+}
+
+.theme-dark-mode .code-preview {
+  background: #111111;
+  border-color: #2a2a2a;
+  color: #d0d0d0;
+}
+
+/* 状态圆点深色适配 */
+.theme-dark-mode .status-dot {
+  border-color: #444;
+}
+
+.status-dot.status-ok {
+  background: #4ade80;
+  border-color: #4ade80;
+}
+
+.status-dot.status-fail {
+  background: #f87171;
+  border-color: #f87171;
+}
+
+.status-dot.status-unknown {
+  background: #6b7280;
+  border-color: #6b7280;
+}
+
+/* 链接健康检测进度条深色适配 */
+.theme-dark-mode .check-progress {
+  background: #222222;
+}
+
+/* 分割线深色适配 */
+.theme-dark-mode .input-group-theme {
+  border-top-color: #2a2a2a;
+}
+
+/* 滚动条深色适配 */
+.theme-dark-mode ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.theme-dark-mode ::-webkit-scrollbar-track {
+  background: #111111;
+}
+
+.theme-dark-mode ::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 3px;
+}
+
+.theme-dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #444444;
+}
