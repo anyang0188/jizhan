@@ -820,6 +820,50 @@ body {
 /* ========================================
    Guide modal content
    ======================================== */
+.deploy-banner {
+  background: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%);
+  border: 1.5px solid #C7D2FE;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.deploy-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.deploy-icon {
+  font-size: 20px;
+}
+.deploy-divider {
+  height: 1.5px;
+  background: #C7D2FE;
+  margin: 12px 0;
+}
+.deploy-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #374151;
+}
+.deploy-item:last-child {
+  margin-bottom: 0;
+}
+.deploy-item-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.deploy-item strong {
+  color: #4F46E5;
+  font-weight: 700;
+}
+
 .section-title {
   font-size: 14px;
   font-weight: 700;
