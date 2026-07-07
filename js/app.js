@@ -1127,7 +1127,6 @@ function showGuide() {
 
       '<div class="section-title">⚠️ 注意事项</div>' +
       '<div class="note-item"><span class="note-icon">📱</span><span class="note-text">生成的是静态 HTML 文件，可在任何浏览器打开</span></div>' +
-      '<div class="note-item"><span class="note-icon">💾</span><span class="note-text">建议先在电脑上测试，确认无误后再使用</span></div>' +
       '<div class="note-item"><span class="note-icon">🌐</span><span class="note-text">HTML 文件支持部署到服务器，生成可分享的网页链接</span></div>'
   });
 }
