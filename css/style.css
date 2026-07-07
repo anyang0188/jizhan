@@ -312,8 +312,6 @@ body {
   box-shadow: 0 0 0 3px var(--primary-light);
 }
 
-.input-footer {
-
 .link-count {
   font-size: 13px;
   color: var(--text-secondary);
