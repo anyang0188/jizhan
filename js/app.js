@@ -251,6 +251,10 @@ function openColorPicker() {
       colorPickerState.lightness = hsl.l;
     }
   }
+  // 初始化拖拽（此时 overlay 可见，getBoundingClientRect 正确）
+  initColorPickerDrag('hueTrack', 'hue');
+  initColorPickerDrag('satTrack', 'saturation');
+  initColorPickerDrag('lightTrack', 'lightness');
   updateColorPickerUI();
   $('colorPickerOverlay').style.display = 'flex';
 }
@@ -304,7 +308,14 @@ function updateColorPickerUI() {
   $('colorPreview').style.background = hex;
 }
 
+var _colorPickerDragInited = {};
+
 function initColorPickerDrag(trackId, param) {
+  // 防止重复绑定事件
+  var key = trackId + '_' + param;
+  if (_colorPickerDragInited[key]) return;
+  _colorPickerDragInited[key] = true;
+  
   var track = $(trackId);
   var thumb = track.querySelector('.vthumb');
   var dragging = false;
@@ -1826,9 +1837,7 @@ function init() {
   }
 
   // 初始化 HSL 取色器
-  initColorPickerDrag('hueTrack', 'hue');
-  initColorPickerDrag('satTrack', 'saturation');
-  initColorPickerDrag('lightTrack', 'lightness');
+  // 取色器拖拽在 openColorPicker 时初始化（此时 DOM 可见）
   $('colorCancelBtn').addEventListener('click', closeColorPicker);
   $('colorConfirmBtn').addEventListener('click', confirmColor);
   $('colorPickerOverlay').addEventListener('click', function(e) {
