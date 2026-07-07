@@ -15,7 +15,7 @@ function generateDataJs(navData) {
       parts.push(' }');
       return parts.join(', ');
     }).join(',\n');
-    return '  {\n    category: ' + quote(group.categoryIcon + ' ' + group.categoryName) + ',\n    sites: [\n' + sites + '\n    ]\n  }';
+    return '  {\n    categoryIcon: ' + quote(group.categoryIcon) + ',\n    categoryName: ' + quote(group.categoryName) + ',\n    sites: [\n' + sites + '\n    ]\n  }';
   }).join(',\n');
   return 'const navData = [\n' + escaped + '\n];';
 }
@@ -51,14 +51,15 @@ function generateAppJS() {
   function renderNav() {
     var html = '';
     navData.forEach(function(section) {
+      var catLabel = (section.categoryIcon || '') + ' ' + (section.categoryName || '');
       html += '<div class="nav-section">';
-      html += '<h2 class="nav-section-title">' + section.category + '</h2>';
+      html += '<h2 class="nav-section-title">' + catLabel + '</h2>';
       html += '<div class="nav-grid">';
       section.sites.forEach(function(site) {
         var domain = getDomain(site.url);
         var siteIcon = site.icon || section.categoryIcon;
         html += '<a href="' + escapeAttr(site.url) + '" target="_blank" class="nav-card" data-search-text="' +
-          escapeAttr(site.name + ' ' + site.desc + ' ' + section.category) + '">';
+          escapeAttr(site.name + ' ' + site.desc + ' ' + catLabel) + '">';
         html += '<div class="nav-card-icon">';
         html += '<img src="https://www.google.com/s2/favicons?domain=' + escapeAttr(domain) + '&sz=64" alt="" class="nav-favicon" onerror="this.style.display=&quot;none&quot;" onload="this.src=&quot;&quot;" loading="lazy">';
         html += '<span class="nav-fallback">' + siteIcon + '</span>';
