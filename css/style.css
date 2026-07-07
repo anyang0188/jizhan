@@ -205,29 +205,23 @@ body {
 }
 
 .input-group-theme {
-  margin-top: 12px;
-  padding-top: 12px;
+  margin-top: 14px;
+  padding-top: 14px;
   border-top: 1px solid var(--border);
 }
 
-/* 名称+副标题双列布局 */
+/* 名称+副标题双列等分布局 */
 .input-row-double {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   align-items: stretch;
 }
 
 .input-half {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 4px;
-}
-
-.input-half:first-child {
-  flex: 0 0 62%;
-}
-.input-half:last-child {
-  flex: 0 0 34%;
 }
 
 .input-label {
@@ -254,25 +248,25 @@ body {
   box-shadow: 0 0 0 3px var(--primary-light);
 }
 
-/* Theme Picker - 单行排列 */
+/* Theme Picker - 3个按钮单行均匀分布 */
 .theme-picker {
   display: flex;
-  gap: 6px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
+  gap: 10px;
+  justify-content: space-between;
 }
 
 .theme-item {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
+  gap: 5px;
+  padding: 5px 12px;
   border-radius: 20px;
   cursor: pointer;
   border: 1.5px solid transparent;
   transition: all var(--transition);
   background: var(--bg);
-  flex-shrink: 0;
+  flex: 1;
+  justify-content: center;
 }
 .theme-item:hover { opacity: 0.85; }
 .theme-picker-btn:hover { opacity: 0.9; }
