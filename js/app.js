@@ -211,7 +211,7 @@ function generateCustomTheme(hexColor) {
   var b = parseInt(c.substring(5,7), 16);
   var lightBg = 'rgb(' + Math.min(255, r + 100) + ',' + Math.min(255, g + 100) + ',' + Math.min(255, b + 100) + ')';
   return {
-    id: 'custom', name: '\\u81ea\\u5b9a\\u4e49', color: c,
+    id: 'custom', name: '自定义', color: c,
     css: {
       '--bg': lightBg, '--card-bg': '#FFFFFF', '--text': '#2C3E50',
       '--text-secondary': '#6B7280', '--border': 'rgba(' + r + ',' + g + ',' + b + ',0.25)',
@@ -375,6 +375,7 @@ function applyThemeCSS(cssObj) {
 // ===== 主题渲染 =====
 function renderThemes() {
   var html = '';
+  THEMES.forEach(function(t) {
     var active = state.currentTheme === t.id;
     var isCustom = t.id === 'custom';
     var bg = isCustom ? (customThemeColor || 'conic-gradient(red,yellow,lime,cyan,blue,magenta,red)') : t.color;
@@ -385,6 +386,7 @@ function renderThemes() {
       '</div>' +
       '<span class="theme-name">' + t.name + '</span>' +
     '</div>';
+  });
 
   var picker = $('themePicker');
   picker.innerHTML = html;
@@ -1797,19 +1799,18 @@ function init() {
   }
   renderThemes();
   bindEvents();
+  // 始终应用初始主题 CSS
+  var theme = THEMES.find(function(t) { return t.id === state.currentTheme; });
+  if (theme) {
+    applyThemeCSS(theme.css);
+  } else if (customThemeColor) {
+    var ct = generateCustomTheme(customThemeColor);
+    applyThemeCSS(ct.css);
+  }
+  updateDarkModeClass();
+  updatePreviewColors();
   if (restored) {
-    // 恢复主题 CSS
-    var theme = THEMES.find(function(t) { return t.id === state.currentTheme; });
-    if (theme) {
-      applyThemeCSS(theme.css);
-    } else if (customThemeColor) {
-      var ct = generateCustomTheme(customThemeColor);
-      applyThemeCSS(ct.css);
-    }
-    // 恢复深色模式类
-    updateDarkModeClass();
     renderClassifiedData();
-    updatePreviewColors();
     // 页面恢复时，加载缓存
     LinkChecker.checkUrls([], function() {}, function() {
       // 缓存加载完成，重新渲染显示状态圆点
