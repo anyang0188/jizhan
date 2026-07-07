@@ -353,7 +353,7 @@ function renderClassifiedData() {
     html += '<div class="cat-sites">';
     cat.sites.forEach(function(site, siteIndex) {
       html += '<div class="cat-site">';
-      html += '<span class="site-icon">' + site.icon + '</span>';
+      html += '<span class="site-icon editable" data-act="editSiteIcon" data-cat="' + catIndex + '" data-site="' + siteIndex + '">' + site.icon + '</span>';
       html += '<span class="site-name editable" data-act="editSiteName" data-cat="' + catIndex + '" data-site="' + siteIndex + '">' + escapeHtml(site.name) + '</span>';
       html += '<span class="site-action-btn" data-act="siteAction" data-cat="' + catIndex + '" data-site="' + siteIndex + '">⇅</span>';
       html += '</div>';
@@ -374,6 +374,7 @@ function handleCategoryAction(e) {
   var siteIndex = parseInt(this.getAttribute('data-site'));
 
   if (act === 'editIcon') openIconPicker(catIndex);
+  else if (act === 'editSiteIcon') openSiteIconPicker(catIndex, siteIndex);
   else if (act === 'editName') editCategoryName(catIndex);
   else if (act === 'editSiteName') editSiteName(catIndex, siteIndex);
   else if (act === 'siteAction') openActionPicker(catIndex, siteIndex);
@@ -402,6 +403,54 @@ function openIconPicker(index) {
       if (idx === -1) return;
       state.classifiedData[idx].categoryIcon = icon;
       state.editingCategoryIndex = -1;
+      closeModal();
+      renderClassifiedData();
+      saveState();
+    });
+  });
+}
+
+// ===== 小网站图标选择器 =====
+function openSiteIconPicker(catIndex, siteIndex) {
+  var catData = state.classifiedData[catIndex];
+  var siteData = catData.sites[siteIndex];
+  var currentIcon = siteData.icon || catData.categoryIcon;
+  var isDefault = !siteData._customIcon;
+
+  var html = '';
+  // 恢复默认选项
+  html += '<div class="icon-item icon-default" data-act="restore"><span class="icon-emoji">↩️</span></div>';
+  html += '<div style="text-align:center;color:var(--text-secondary);font-size:12px;padding:4px 0 8px;">恢复默认（使用分类图标）</div>';
+  ICON_OPTIONS.forEach(function(icon) {
+    html += '<div class="icon-item' + (icon === currentIcon ? ' icon-selected' : '') + '" data-icon="' + icon + '"><span class="icon-emoji">' + icon + '</span></div>';
+  });
+
+  showModal({
+    title: '🎨 选择图标',
+    customClass: 'icon-picker-modal',
+    bodyHtml: '<div class="icon-grid">' + html + '</div>',
+    onClose: function() { state.editingCategoryIndex = -1; }
+  });
+
+  // 恢复默认
+  var restoreBtn = document.querySelector('.icon-default');
+  if (restoreBtn) {
+    restoreBtn.addEventListener('click', function() {
+      state.classifiedData[catIndex].sites[siteIndex].icon = catData.categoryIcon;
+      state.classifiedData[catIndex].sites[siteIndex]._customIcon = false;
+      closeModal();
+      renderClassifiedData();
+      saveState();
+      showToast('已恢复分类默认图标', 'success');
+    });
+  }
+
+  // 选择图标
+  document.querySelectorAll('.icon-item[data-icon]').forEach(function(item) {
+    item.addEventListener('click', function() {
+      var icon = this.getAttribute('data-icon');
+      state.classifiedData[catIndex].sites[siteIndex].icon = icon;
+      state.classifiedData[catIndex].sites[siteIndex]._customIcon = true;
       closeModal();
       renderClassifiedData();
       saveState();

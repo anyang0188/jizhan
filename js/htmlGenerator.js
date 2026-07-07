@@ -5,7 +5,15 @@
 function generateDataJs(navData) {
   const escaped = navData.map(group => {
     const sites = group.sites.map(site => {
-      return '      { name: ' + quote(site.name) + ', icon: ' + quote(site.icon) + ', desc: ' + quote(site.desc) + ', url: ' + quote(site.url) + ', tag: ' + quote(site.tag) + ' }';
+      var parts = ['      { name: ' + quote(site.name)];
+      if (site.icon !== group.categoryIcon) {
+        parts.push('icon: ' + quote(site.icon));
+      }
+      parts.push('desc: ' + quote(site.desc));
+      parts.push('url: ' + quote(site.url));
+      parts.push('tag: ' + quote(site.tag));
+      parts.push(' }');
+      return parts.join(', ');
     }).join(',\n');
     return '  {\n    category: ' + quote(group.categoryIcon + ' ' + group.categoryName) + ',\n    sites: [\n' + sites + '\n    ]\n  }';
   }).join(',\n');

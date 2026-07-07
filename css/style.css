@@ -526,7 +526,8 @@ body {
 }
 .cat-site:hover { background: var(--primary-light); }
 
-.site-icon { font-size: 11px; line-height: 1; }
+.site-icon { font-size: 11px; line-height: 1; cursor: pointer; transition: opacity 0.2s; }
+.site-icon:hover { opacity: 0.6; }
 
 .site-name {
   font-size: 12px;
