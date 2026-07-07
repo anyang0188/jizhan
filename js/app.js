@@ -482,7 +482,7 @@ function renderClassifiedData() {
     html += '<div class="category-item">';
     html += '<div class="cat-header">';
     html += '<span class="cat-icon editable" data-act="editIcon" data-index="' + catIndex + '">' + cat.categoryIcon + '</span>';
-    html += '<span class="cat-name editable" style="color:' + state.themeStyle.text + ';" data-act="editName" data-index="' + catIndex + '">' + escapeHtml(cat.categoryName) + '</span>';
+    html += '<span class="cat-name editable" style="color:' + state.themeStyle.text + ';" data-act="editName" data-index="' + catIndex + '">' + escapeHtml(cat.categoryName || '未命名分类') + '</span>';
     html += '<span class="cat-count">' + cat.sites.length + ' 个</span>';
     html += '<div class="cat-actions">';
     if (catIndex > 0) html += '<span class="move-btn" data-act="moveCat" data-index="' + catIndex + '" data-dir="up">&#8593;</span>';
@@ -1393,6 +1393,21 @@ function fallbackCopy(text) {
 }
 
 // ===== 书签导入功能 =====
+
+// 书签导入英文分组名 → 中文映射
+var BOOKMARK_GROUP_MAP = {
+  'Other Bookmarks': '其他书签',
+  'Bookmarks Toolbar': '收藏夹栏',
+  'Bookmarks Bar': '收藏夹栏',
+  'Firefox Bookmarks': 'Firefox 书签',
+  'Chrome Bookmarks': 'Chrome 书签',
+  'Edge Favorites': 'Edge 收藏夹',
+  'Internet Explorer Favorites': 'IE 收藏夹',
+  'Recently Bookmarked': '最近收藏',
+  'Unsorted Bookmarks': '未分类书签',
+  'Mobile Bookmarks': '手机书签'
+};
+
 var BOOKMARK_BLACKLIST = ['已导入', 'imported', '系统文件夹'];
 
 function cleanTitle(title) {
@@ -1483,7 +1498,7 @@ function importBookmarks(file) {
       allLinks.push({
         url: url,
         title: title,
-        path: validPathParts.join('-')
+        path: validPathParts.map(function(p) { return BOOKMARK_GROUP_MAP[p] || p; }).join('-')
       });
     }
     
