@@ -556,7 +556,7 @@ function renderCheckToolbar(totalSites) {
       '<div class="check-row-bot">' +
         '<button class="btn-action btn-copy" id="copyFailedBtn">📋 复制失效链接</button>' +
         '<div class="more-dropdown" id="moreDropdown">' +
-          '<button class="btn-more" id="moreBtn">⋯ 更多</button>' +
+          '<button class="btn-more" id="moreBtn">⋯ 异常管理</button>' +
           '<div class="more-menu" id="moreMenu">' +
             '<div class="more-menu-item" id="isolateMenuItem">隔离异常</div>' +
             '<div class="more-menu-item more-danger" id="removeMenuItem">清理异常</div>' +
@@ -596,7 +596,7 @@ function renderCheckToolbar(totalSites) {
     copyBtn.addEventListener('click', copyFailedUrls);
   }
 
-  // 更多下拉菜单开关
+  // 异常管理下拉菜单开关
   var moreBtn = toolbar.querySelector('#moreBtn');
   var moreMenu = toolbar.querySelector('#moreMenu');
   if (moreBtn && moreMenu) {
@@ -1659,7 +1659,7 @@ function showGuide() {
       '<div class="section-title">📥 批量导入浏览器全部收藏夹</div>' +
       '<div class="format-intro">适合一次性迁移几百条书签，不用一条条复制：</div>' +
       '<div class="guide-step"><span class="step-num">1️⃣</span><span class="step-text">电脑打开 Chrome/Edge，地址栏输入 chrome://bookmarks 或 edge://favorites/</span></div>' +
-      '<div class="guide-step"><span class="step-num">2️⃣</span><span class="step-text">右上角「更多选项」→ 导出书签，保存为HTML文件（所有浏览器通用标准格式）</span></div>' +
+      '<div class="guide-step"><span class="step-num">2️⃣</span><span class="step-text">右上角「异常管理选项」→ 导出书签，保存为HTML文件（所有浏览器通用标准格式）</span></div>' +
       '<div class="guide-step"><span class="step-num">3️⃣</span><span class="step-text">点击本站「📥 一键导入书签」按钮，上传导出的HTML文件，自动读取文件夹结构，一键生成分类+链接</span></div>' +
       '<div class="format-note">⚠️ 受浏览器沙箱安全限制，普通网页无法直接读取浏览器内部书签数据库。本工具采用本地文件解析方案，上传的HTML文件仅在浏览器内存运算，不会上传任何数据至服务器，解析完毕内存数据自动清空，隐私安全性高于需要申请书签权限的网页脚本和浏览器扩展。</div>' +
 

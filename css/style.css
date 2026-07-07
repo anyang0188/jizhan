@@ -722,7 +722,21 @@ body {
 .check-row-bot {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  flex-wrap: nowrap;
+}
+
+.check-row-mid {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.check-filters {
+  display: flex;
+  gap: 5px;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
 }
 
 .btn-action {
