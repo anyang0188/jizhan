@@ -213,7 +213,7 @@ function generateCustomTheme(hexColor) {
   var b = parseInt(c.substring(5,7), 16);
   var lightBg = 'rgb(' + Math.min(255, r + 100) + ',' + Math.min(255, g + 100) + ',' + Math.min(255, b + 100) + ')';
   return {
-    id: 'custom', name: '\u81ea\u5b9a\u4e49', color: c,
+    id: 'custom', name: '\\u81ea\\u5b9a\\u4e49', color: c,
     css: {
       '--bg': lightBg, '--card-bg': '#FFFFFF', '--text': '#2C3E50',
       '--text-secondary': '#6B7280', '--border': 'rgba(' + r + ',' + g + ',' + b + ',0.25)',
@@ -223,6 +223,144 @@ function generateCustomTheme(hexColor) {
     },
     preview: { bg: lightBg, cardBg: '#FFFFFF', text: '#2C3E50' }
   };
+}
+
+// ===== HSL 取色器 =====
+function hslToHex(h, s, l) {
+  s /= 100;
+  l /= 100;
+  var a = s * Math.min(l, 1 - l);
+  var f = function(n) {
+    var k = (n + h / 30) % 12;
+    var color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, '0');
+  };
+  return '#' + f(0) + f(8) + f(4);
+}
+
+var colorPickerState = { hue: 0, saturation: 50, lightness: 50 };
+var TRACK_HEIGHT = 200;
+var THUMB_HEIGHT = 24;
+var MAX_Y = TRACK_HEIGHT - THUMB_HEIGHT;
+
+function openColorPicker() {
+  // 如果已有自定义颜色，解析 HSL
+  if (customThemeColor) {
+    var hsl = hexToHsl(customThemeColor);
+    if (hsl) {
+      colorPickerState.hue = hsl.h;
+      colorPickerState.saturation = hsl.s;
+      colorPickerState.lightness = hsl.l;
+    }
+  }
+  updateColorPickerUI();
+  $('colorPickerOverlay').style.display = 'flex';
+}
+
+function closeColorPicker() {
+  $('colorPickerOverlay').style.display = 'none';
+}
+
+function hexToHsl(hex) {
+  var h = hex.replace('#', '');
+  if (h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+  var r = parseInt(h.substring(0,2), 16) / 255;
+  var g = parseInt(h.substring(2,4), 16) / 255;
+  var b = parseInt(h.substring(4,6), 16) / 255;
+  var max = Math.max(r, g, b), min = Math.min(r, g, b);
+  var h2 = 0, s = 0, l = (max + min) / 2;
+  if (max !== min) {
+    var d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    if (max === r) h2 = ((g - b) / d + (g < b ? 6 : 0)) * 60;
+    else if (max === g) h2 = ((b - r) / d + 2) * 60;
+    else h2 = ((r - g) / d + 4) * 60;
+  }
+  return { h: Math.round(h2), s: Math.round(s * 100), l: Math.round(l * 100) };
+}
+
+function updateColorPickerUI() {
+  var h = colorPickerState.hue;
+  var s = colorPickerState.saturation;
+  var l = colorPickerState.lightness;
+  var hex = hslToHex(h, s, l);
+
+  // 更新滑块位置
+  var hueY = Math.round((1 - h / 360) * MAX_Y);
+  var satY = Math.round((1 - s / 100) * MAX_Y);
+  var lightY = Math.round((1 - l / 100) * MAX_Y);
+  $('hueThumb').style.top = (THUMB_HEIGHT / 2 + hueY) + 'px';
+  $('satThumb').style.top = (THUMB_HEIGHT / 2 + satY) + 'px';
+  $('lightThumb').style.top = (THUMB_HEIGHT / 2 + lightY) + 'px';
+
+  // 更新饱和度和亮度的渐变背景
+  $('satTrack').style.background = 'linear-gradient(to top, #808080 0%, ' + hslToHex(h, 100, 50) + ' 100%)';
+  $('lightTrack').style.background = 'linear-gradient(to top, #000 0%, ' + hslToHex(h, s, 50) + ' 50%, #fff 100%)';
+
+  // 更新数值显示
+  $('hueVal').textContent = h + '°';
+  $('satVal').textContent = s + '%';
+  $('lightVal').textContent = l + '%';
+
+  // 更新预览色
+  $('colorPreview').style.background = hex;
+}
+
+function initColorPickerDrag(trackId, param) {
+  var track = $(trackId);
+  var thumb = track.querySelector('.vthumb');
+  var dragging = false;
+
+  function updateFromY(y) {
+    var rect = track.getBoundingClientRect();
+    var relY = y - rect.top - THUMB_HEIGHT / 2;
+    var ratio = 1 - Math.max(0, Math.min(1, relY / MAX_Y));
+    if (param === 'hue') {
+      colorPickerState.hue = Math.round(ratio * 360);
+    } else {
+      colorPickerState[param] = Math.round(ratio * 100);
+    }
+    updateColorPickerUI();
+  }
+
+  track.addEventListener('mousedown', function(e) {
+    dragging = true;
+    updateFromY(e.clientY);
+    e.preventDefault();
+  });
+
+  track.addEventListener('touchstart', function(e) {
+    dragging = true;
+    updateFromY(e.touches[0].clientY);
+    e.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener('mousemove', function(e) {
+    if (dragging) updateFromY(e.clientY);
+  });
+
+  document.addEventListener('touchmove', function(e) {
+    if (dragging) {
+      updateFromY(e.touches[0].clientY);
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  document.addEventListener('mouseup', function() { dragging = false; });
+  document.addEventListener('touchend', function() { dragging = false; });
+}
+
+function confirmColor() {
+  var hex = hslToHex(colorPickerState.hue, colorPickerState.saturation, colorPickerState.lightness);
+  customThemeColor = hex;
+  try { localStorage.setItem('jizhan_theme_color', customThemeColor); } catch(e) {}
+  var theme = generateCustomTheme(customThemeColor);
+  state.currentTheme = 'custom';
+  state.themeStyle = theme.preview;
+  closeColorPicker();
+  renderThemes();
+  updatePreviewColors();
+  saveState();
 }
 
 // ===== 主题渲染 =====
@@ -255,22 +393,9 @@ function renderThemes() {
     item.addEventListener('click', function() {
       var themeId = this.getAttribute('data-theme');
       var isCustom = this.getAttribute('data-custom') === '1';
-      // 自定义按钮：直接打开取色器
+      // 自定义按钮：打开 HSL 取色器
       if (isCustom) {
-        var input = document.createElement('input');
-        input.type = 'color';
-        input.value = customThemeColor || '#4F6EF7';
-        input.addEventListener('input', function() {
-          customThemeColor = this.value;
-          try { localStorage.setItem('jizhan_theme_color', customThemeColor); } catch(e) {}
-          var theme = generateCustomTheme(customThemeColor);
-          state.currentTheme = 'custom';
-          state.themeStyle = theme.preview;
-          renderThemes();
-          updatePreviewColors();
-          saveState();
-        });
-        input.click();
+        openColorPicker();
         return;
       }
       var theme;
@@ -1092,6 +1217,16 @@ function init() {
     renderClassifiedData();
     updatePreviewColors();
   }
+
+  // 初始化 HSL 取色器
+  initColorPickerDrag('hueTrack', 'hue');
+  initColorPickerDrag('satTrack', 'saturation');
+  initColorPickerDrag('lightTrack', 'lightness');
+  $('colorCancelBtn').addEventListener('click', closeColorPicker);
+  $('colorConfirmBtn').addEventListener('click', confirmColor);
+  $('colorPickerOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeColorPicker();
+  });
 }
 
 if (document.readyState === 'loading') {
