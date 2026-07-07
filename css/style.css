@@ -651,18 +651,18 @@ body {
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 10px 14px;
+  padding: 16px 18px;
   margin-bottom: 8px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
-.check-toolbar-top {
+.check-row-top {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
-  flex-wrap: wrap;
 }
 
 .check-info {
@@ -673,7 +673,7 @@ body {
 
 .btn-check {
   font-size: 12px;
-  padding: 4px 14px;
+  padding: 4px 16px;
   border-radius: 20px;
   border: 1px solid var(--primary);
   background: var(--primary-light);
@@ -692,45 +692,25 @@ body {
   cursor: not-allowed;
 }
 
-.btn-copy-failed {
-  font-size: 12px;
-  padding: 4px 14px;
-  border-radius: 20px;
-  border: 1px solid #FECACA;
-  background: #FEF2F2;
-  color: #DC2626;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all var(--transition);
-  white-space: nowrap;
-}
-.btn-copy-failed:hover {
-  background: #FEE2E2;
-  border-color: #FCA5A5;
-}
-
 .check-progress {
-  height: 6px;
+  height: 4px;
   background: var(--border);
-  border-radius: 3px;
+  border-radius: 2px;
   overflow: hidden;
-  position: relative;
 }
 
 .check-progress-bar {
   height: 100%;
   background: linear-gradient(90deg, var(--primary), #6C8CFF);
-  border-radius: 3px;
+  border-radius: 2px;
   transition: width 0.3s ease;
   width: 0%;
 }
 
-.check-progress-text {
-  font-size: 11px;
-  color: var(--text-secondary);
-  font-weight: 600;
-  text-align: center;
-  margin-top: 2px;
+.check-row-mid {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .check-filters {
@@ -739,25 +719,39 @@ body {
   flex-wrap: wrap;
 }
 
-.check-actions {
+.check-row-bot {
   display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  padding-top: 4px;
-  border-top: 1px solid var(--border);
+  gap: 8px;
 }
 
-.btn-isolate {
+.btn-action {
+  flex: 1;
   font-size: 12px;
-  padding: 4px 14px;
-  border-radius: 20px;
-  border: 1px solid #FBBF24;
-  background: #FFFBEB;
-  color: #D97706;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
   cursor: pointer;
   font-weight: 600;
   transition: all var(--transition);
   white-space: nowrap;
+  text-align: center;
+  min-width: 0;
+}
+
+.btn-copy {
+  background: #FEF2F2;
+  color: #DC2626;
+  border-color: #FECACA;
+}
+.btn-copy:hover {
+  background: #FEE2E2;
+  border-color: #FCA5A5;
+}
+
+.btn-isolate {
+  background: #FFFBEB;
+  color: #D97706;
+  border-color: #FBBF24;
 }
 .btn-isolate:hover {
   background: #FBBF24;
@@ -765,16 +759,9 @@ body {
 }
 
 .btn-remove {
-  font-size: 12px;
-  padding: 4px 14px;
-  border-radius: 20px;
-  border: 1px solid #FCA5A5;
   background: #FEF2F2;
   color: #DC2626;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all var(--transition);
-  white-space: nowrap;
+  border-color: #FCA5A5;
 }
 .btn-remove:hover {
   background: #EF4444;

@@ -549,20 +549,28 @@ function renderCheckToolbar(totalSites) {
   var checkBtnText = state.linkChecking ? '检测中…' : '批量校验';
   var checkBtnCls = state.linkChecking ? 'btn-check check-disabled' : 'btn-check';
 
+  var actionBtnsHtml = '';
+  if (sFail + sUnknown + unchecked > 0) {
+    actionBtnsHtml =
+      '<button class="btn-action btn-copy" id="copyFailedBtn">📋 复制</button>' +
+      '<button class="btn-action btn-isolate" id="isolateFailedBtn">隔离</button>' +
+      '<button class="btn-action btn-remove" id="removeFailedBtn">清理</button>';
+  }
+
   toolbar.innerHTML =
     '<div class="check-toolbar">' +
-      '<span class="check-info">🔗 链接健康检测</span>' +
-      '<button class="' + checkBtnCls + '" id="batchCheckBtn">' + checkBtnText + '</button>' +
+      '<div class="check-row-top">' +
+        '<span class="check-info">🔗 链接健康检测</span>' +
+        '<button class="' + checkBtnCls + '" id="batchCheckBtn">' + checkBtnText + '</button>' +
+      '</div>' +
       '<div class="check-progress" id="checkProgress" style="display:none;">' +
         '<div class="check-progress-bar" id="checkProgressBar"></div>' +
         '<span class="check-progress-text" id="checkProgressText">0%</span>' +
       '</div>' +
-      '<div class="check-filters">' + filterBtns + '</div>' +
-      '<div class="check-actions">' +
-        (sFail + sUnknown + unchecked > 0 ? '<button class="btn-copy-failed" id="copyFailedBtn">📋 复制失效链接</button>' : '') +
-        (sFail + sUnknown + unchecked > 0 ? '<button class="btn-isolate" id="isolateFailedBtn">隔离异常</button>' : '') +
-        (sFail + sUnknown + unchecked > 0 ? '<button class="btn-remove" id="removeFailedBtn">清理异常</button>' : '') +
+      '<div class="check-row-mid">' +
+        '<div class="check-filters">' + filterBtns + '</div>' +
       '</div>' +
+      '<div class="check-row-bot">' + actionBtnsHtml + '</div>' +
     '</div>';
 
   // 批量校验按钮
