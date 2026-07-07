@@ -554,10 +554,11 @@ function renderCheckToolbar(totalSites) {
   if (hasFailed) {
     actionHtml =
       '<div class="check-row-bot">' +
-        '<button class="btn-action btn-copy" id="copyFailedBtn">📋 复制失效链接</button>' +
+        '<div class="check-filters">' + filterBtns + '</div>' +
         '<div class="more-dropdown" id="moreDropdown">' +
-          '<button class="btn-more" id="moreBtn">⋯ 异常管理</button>' +
+          '<button class="btn-more" id="moreBtn">异常管理</button>' +
           '<div class="more-menu" id="moreMenu">' +
+            '<div class="more-menu-item" id="copyMenuItem">📋 复制失效链接</div>' +
             '<div class="more-menu-item" id="isolateMenuItem">隔离异常</div>' +
             '<div class="more-menu-item more-danger" id="removeMenuItem">清理异常</div>' +
           '</div>' +
@@ -575,9 +576,6 @@ function renderCheckToolbar(totalSites) {
         '<div class="check-progress-bar" id="checkProgressBar"></div>' +
         '<span class="check-progress-text" id="checkProgressText">0%</span>' +
       '</div>' +
-      '<div class="check-row-mid">' +
-        '<div class="check-filters">' + filterBtns + '</div>' +
-      '</div>' +
       actionHtml +
     '</div>';
 
@@ -588,12 +586,6 @@ function renderCheckToolbar(totalSites) {
       if (state.linkChecking) return;
       startBatchCheck();
     });
-  }
-
-  // 复制失效链接按钮
-  var copyBtn = toolbar.querySelector('#copyFailedBtn');
-  if (copyBtn) {
-    copyBtn.addEventListener('click', copyFailedUrls);
   }
 
   // 异常管理下拉菜单开关
@@ -613,6 +605,15 @@ function renderCheckToolbar(totalSites) {
     });
   }
 
+  // 复制失效链接（从下拉菜单）
+  var copyItem = toolbar.querySelector('#copyMenuItem');
+  if (copyItem) {
+    copyItem.addEventListener('click', function() {
+      moreMenu.classList.remove('open');
+      copyFailedUrls();
+    });
+  }
+
   // 隔离异常（从下拉菜单）
   var isolateItem = toolbar.querySelector('#isolateMenuItem');
   if (isolateItem) {
@@ -627,7 +628,7 @@ function renderCheckToolbar(totalSites) {
   if (removeItem) {
     removeItem.addEventListener('click', function() {
       moreMenu.classList.remove('open');
-      showConfirm('确认清理异常链接', '此操作将永久删除所有异常链接，删除后不可恢复。确定要继续吗？', {
+      showConfirm('确认清理异常链接', '确认删除所有异常链接？', {
         confirmText: '确认清理',
         cancelText: '取消'
       }).then(function(confirmed) {

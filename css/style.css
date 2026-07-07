@@ -726,12 +726,6 @@ body {
   flex-wrap: nowrap;
 }
 
-.check-row-mid {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
 .check-filters {
   display: flex;
   gap: 5px;
