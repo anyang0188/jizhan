@@ -452,18 +452,6 @@ body {
   color: var(--text);
 }
 
-.btn-edit {
-  background: var(--primary-light);
-  color: var(--primary);
-  font-size: 13px;
-  padding: 5px 14px;
-  white-space: nowrap;
-}
-.btn-edit:hover {
-  background: var(--primary);
-  color: #fff;
-}
-
 .format-tip {
   font-size: 11px;
   color: var(--success);

@@ -1083,35 +1083,6 @@ function onReset() {
   });
 }
 
-// ===== 重新编辑 =====
-function onEdit() {
-  // 将解析结果的链接回填到输入框
-  var links = [];
-  state.classifiedData.forEach(function(cat) {
-    cat.sites.forEach(function(site) {
-      var line = site.url;
-      if (site.name && site.name !== site.url) {
-        line += ' ' + site.name;
-      }
-      if (cat.categoryName) {
-        line += '（' + cat.categoryName + '）';
-      }
-      links.push(line);
-    });
-  });
-  $('linkInput').value = links.join('\n');
-  state.parsedCount = links.length;
-  $('linkCount').textContent = links.length + ' 个链接已解析';
-  $('linkCount').style.color = 'var(--success)';
-  // 隐藏预览，显示输入状态
-  $('previewCard').style.display = 'none';
-  $('emptyState').style.display = 'none';
-  $('parseBtn').disabled = false;
-  $('parseBtn').innerHTML = '解析链接';
-  $('parseBtn').style.opacity = '1';
-  showToast('已回填链接，可以重新编辑');
-}
-
 // ===== 使用说明 =====
 function showGuide() {
   showModal({
@@ -1226,9 +1197,6 @@ function bindEvents() {
 
   // 重置按钮
   $('resetBtn').addEventListener('click', onReset);
-
-  // 重新编辑按钮
-  $('editBtn').addEventListener('click', onEdit);
 
   // 使用说明
   $('guideBtn').addEventListener('click', showGuide);
