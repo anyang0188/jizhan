@@ -498,6 +498,9 @@ function renderClassifiedData() {
         dotHtml = '<span class="status-dot status-fail" title="失效"></span>';
       } else if (status === 'unknown') {
         dotHtml = '<span class="status-dot status-unknown" title="无法检测"></span>';
+      } else {
+        // 未检测/null → 强制显示待检测灰色圆点
+        dotHtml = '<span class="status-dot status-unknown" title="待检测"></span>';
       }
       html += '<div class="cat-site">';
       html += dotHtml;
@@ -524,11 +527,19 @@ function renderCheckToolbar(totalSites) {
   // 获取当前页面所有URL，用于精准统计
   var currentUrls = getAllUrls();
   var stats = LinkChecker.getStats(currentUrls);
+  // 安全数值兜底
+  var sOk = typeof stats.ok === 'number' ? stats.ok : 0;
+  var sFail = typeof stats.fail === 'number' ? stats.fail : 0;
+  var sUnknown = typeof stats.unknown === 'number' ? stats.unknown : 0;
+  var sTotal = typeof stats.total === 'number' ? stats.total : 0;
+  // 未检测数量 = 总链接数 - 已检测数
+  var unchecked = Math.max(0, totalSites - sTotal);
+
   var filterBtns = '';
   var filters = [
     { key: 'all', label: '全部 (' + totalSites + ')' },
-    { key: 'ok', label: '正常 (' + stats.ok + ')' },
-    { key: 'fail', label: '异常 (' + (stats.fail + stats.unknown + unchecked) + ')' }
+    { key: 'ok', label: '正常 (' + sOk + ')' },
+    { key: 'fail', label: '异常 (' + (sFail + sUnknown + unchecked) + ')' }
   ];
   filters.forEach(function(f) {
     var cls = state.linkCheckFilter === f.key ? 'check-filter-btn check-filter-active' : 'check-filter-btn';
@@ -537,9 +548,6 @@ function renderCheckToolbar(totalSites) {
 
   var checkBtnText = state.linkChecking ? '检测中…' : '批量校验';
   var checkBtnCls = state.linkChecking ? 'btn-check check-disabled' : 'btn-check';
-
-  // 未检测数量
-  var unchecked = totalSites - stats.total;
 
   toolbar.innerHTML =
     '<div class="check-toolbar">' +
@@ -550,7 +558,7 @@ function renderCheckToolbar(totalSites) {
         '<span class="check-progress-text" id="checkProgressText">0%</span>' +
       '</div>' +
       '<div class="check-filters">' + filterBtns + '</div>' +
-      (stats.fail > 0 ? '<button class="btn-copy-failed" id="copyFailedBtn">📋 复制失效链接</button>' : '') +
+      (sFail + sUnknown + unchecked > 0 ? '<button class="btn-copy-failed" id="copyFailedBtn">📋 复制失效链接</button>' : '') +
     '</div>';
 
   // 批量校验按钮
