@@ -1237,43 +1237,45 @@ function showGuide() {
       '<div class="deploy-banner">' +
         '<div class="deploy-title"><span class="deploy-icon">🌐</span> 代部署服务</div>' +
         '<div class="deploy-divider"></div>' +
-        '<div class="deploy-item"><span class="deploy-item-icon">🛠️</span><span>不想自己动手？帮你把导航站部署到线上，生成可分享的链接 · 费用 <strong>5 元起</strong></span></div>' +
-        '<div class="deploy-item"><span class="deploy-item-icon">📞</span><span>联系微信：<strong>anyang0188</strong>（备注"导航站部署"）</span></div>' +
+        '<div class="deploy-item"><span class="deploy-item-icon">🛠️</span><span>不想折腾部署流程？帮你直接上线，生成永久公开分享链接 · 费用 <strong>5 元起</strong></span></div>' +
+        '<div class="deploy-item"><span class="deploy-item-icon">📞</span><span>联系微信：<strong>anyang0188</strong>（备注：导航部署）</span></div>' +
       '</div>' +
 
       '<div class="section-title">✨ 主要功能</div>' +
-      '<div class="feature-item"><span class="feature-icon">🔗</span><span class="feature-text">粘贴链接，自动解析网址和中文名</span></div>' +
-      '<div class="feature-item"><span class="feature-icon">📂</span><span class="feature-text">智能分类：AI 工具、搜索引擎、社交平台等</span></div>' +
-      '<div class="feature-item"><span class="feature-icon">🎨</span><span class="feature-text">一键生成精美导航站 HTML 文件</span></div>' +
+      '<div class="feature-item"><span class="feature-icon">🔗</span><span class="feature-text">粘贴链接，自动解析网址和站点名称</span></div>' +
+      '<div class="feature-item"><span class="feature-icon">📂</span><span class="feature-text">智能识别分类，自动归类AI工具、搜索引擎、资源网站</span></div>' +
+      '<div class="feature-item"><span class="feature-icon">🎨</span><span class="feature-text">6套精美背景主题 + 自定义取色器</span></div>' +
+      '<div class="feature-item"><span class="feature-icon">📄</span><span class="feature-text">一键导出完整静态HTML导航文件，永久离线可用</span></div>' +
 
-      '<div class="section-title">✏️ 分类编辑</div>' +
-      '<div class="feature-item"><span class="feature-icon">🎯</span><span class="feature-text">点击分类图标 → 更换图标（42 个可选）</span></div>' +
-      '<div class="feature-item"><span class="feature-icon">✏️</span><span class="feature-text">点击分类名称 → 修改分类名（同名自动合并）</span></div>' +
-      '<div class="feature-item"><span class="feature-icon">📝</span><span class="feature-text">点击网站名称 → 修改显示名（导出时用）</span></div>' +
+      '<div class="section-title">📝 输入格式（三选一，一行一条）</div>' +
+      '<div class="format-example"><span class="format-label">格式1（最简）：只粘贴网址</span><span class="format-code">https://github.com</span></div>' +
+      '<div class="format-example"><span class="format-label">格式2（自定义名称）：网址 + 显示名称</span><span class="format-code">https://chatgpt.com ChatGPT</span></div>' +
+      '<div class="format-example"><span class="format-label">格式3（指定分类，批量整理神器）：网址 + 名称 +（分类名）</span><span class="format-code">https://chatgpt.com ChatGPT（AI对话）</span></div>' +
+      '<div class="format-note">💡 用括号包裹分类名，程序自动新建分组</div>' +
+
+      '<div class="section-title">📥 批量导入浏览器全部收藏夹</div>' +
+      '<div class="format-intro">适合一次性迁移几百条书签，不用一条条复制：</div>' +
+      '<div class="guide-step"><span class="step-num">1️⃣</span><span class="step-text">电脑打开 Chrome/Edge，地址栏输入 chrome://bookmarks 或 edge://favorites/</span></div>' +
+      '<div class="guide-step"><span class="step-num">2️⃣</span><span class="step-text">右上角「更多选项」→ 导出书签，保存为HTML文件（所有浏览器通用标准格式）</span></div>' +
+      '<div class="guide-step"><span class="step-num">3️⃣</span><span class="step-text">点击本站「📥 一键导入书签」按钮，上传导出的HTML文件，自动读取文件夹结构，一键生成分类+链接</span></div>' +
+      '<div class="format-note">⚠️ 受浏览器沙箱安全限制，普通网页无法直接读取浏览器内部书签数据库。本工具采用本地文件解析方案，上传的HTML文件仅在浏览器内存运算，不会上传任何数据至服务器，解析完毕内存数据自动清空，隐私安全性高于需要申请书签权限的网页脚本和浏览器扩展。</div>' +
+
+      '<div class="section-title">✏️ 分类 & 站点编辑</div>' +
+      '<div class="feature-item"><span class="feature-icon">🎯</span><span class="feature-text">点击分类图标 → 更换图标（42个可选）</span></div>' +
+      '<div class="feature-item"><span class="feature-icon">✏️</span><span class="feature-text">点击分类名称 → 修改名字，同名分类会自动合并</span></div>' +
+      '<div class="feature-item"><span class="feature-icon">📝</span><span class="feature-text">点击网站名称 → 修改前端展示文字（仅导出生效）</span></div>' +
       '<div class="feature-item"><span class="feature-icon">⇅</span><span class="feature-text">点击 ⇅ 按钮 → 弹出操作面板，可选择移动到其它分类或删除站点</span></div>' +
-      '<div class="feature-item"><span class="feature-icon">↑↓</span><span class="feature-text">点击 ↑↓ 按钮 → 调整分类顺序</span></div>' +
-      '<div class="feature-item"><span class="feature-icon">🎨</span><span class="feature-text">6 套背景主题 + 自定义取色器</span></div>' +
+      '<div class="feature-item"><span class="feature-icon">↑↓</span><span class="feature-text">点击 ↑↓ 按钮 → 调整分类/网站排序</span></div>' +
+      '<div class="note-item"><span class="note-icon">🗑</span><span class="note-text">分类内所有网站清空后，分类会自动消失</span></div>' +
 
-      '<div class="section-title">📝 使用方法</div>' +
-      '<div class="guide-step"><span class="step-num">1️⃣</span><span class="step-text">在上方输入框粘贴链接，一行一个</span></div>' +
-      '<div class="guide-step"><span class="step-num">2️⃣</span><span class="step-text">点击"解析链接"按钮，自动解析和分类</span></div>' +
-      '<div class="guide-step"><span class="step-num">3️⃣</span><span class="step-text">预览结果，可自由编辑分类图标/名称/排序/移动网站</span></div>' +
-      '<div class="guide-step"><span class="step-num">4️⃣</span><span class="step-text">选择喜欢的背景主题</span></div>' +
-      '<div class="guide-step"><span class="step-num">5️⃣</span><span class="step-text">点击"下载导航站文件"导出</span></div>' +
-
-      '<div class="section-title">💡 输入格式</div>' +
-      '<div class="format-intro">以下格式都可以，按习惯选择：</div>' +
-      '<div class="format-example"><span class="format-label">格式1：只粘贴链接</span><span class="format-code">https://github.com</span></div>' +
-      '<div class="format-example"><span class="format-label">格式2：链接 + 中文名</span><span class="format-code">https://chat.deepseek.com DeepSeek AI助手</span></div>' +
-      '<div class="format-example"><span class="format-label">格式3：自定义分类</span><span class="format-code">https://www.bilibili.com/ 哔哩哔哩（视频）</span></div>' +
-      '<div class="format-note">💡 用括号标注分类名，如（视频）、（工具），会自动创建新分类</div>' +
-
-      '<div class="section-title">🗑 删除站点</div>' +
-      '<div class="note-item"><span class="note-icon">🗑</span><span class="note-text">点击站点右侧 ⇅ 按钮，在弹出面板中选择「删除」，确认后即刻移除。若分类下所有站点均被删除，该分类将自动移除。</span></div>' +
+      '<div class="section-title">🚀 上线部署</div>' +
+      '<div class="guide-step"><span class="step-num">1️⃣</span><span class="step-text">配置好所有链接、选好喜欢的背景主题</span></div>' +
+      '<div class="guide-step"><span class="step-num">2️⃣</span><span class="step-text">点击「📥 生成链页」导出完整HTML源码</span></div>' +
+      '<div class="guide-step"><span class="step-num">3️⃣</span><span class="step-text">自行上传GitHub Pages、Vercel、服务器即可生成永久可分享网页链接</span></div>' +
 
       '<div class="section-title">⚠️ 注意事项</div>' +
-      '<div class="note-item"><span class="note-icon">📱</span><span class="note-text">生成的是静态 HTML 文件，可在任何浏览器打开</span></div>' +
-      '<div class="note-item"><span class="note-icon">🌐</span><span class="note-text">HTML 文件支持部署到服务器，生成可分享的网页链接</span></div>'
+      '<div class="note-item"><span class="note-icon">📱</span><span class="note-text">导出文件为纯静态HTML，无后端、无数据库，任何浏览器都能打开</span></div>' +
+      '<div class="note-item"><span class="note-icon">🔒</span><span class="note-text">所有数据全部保存在本地文件，隐私完全可控，不会上传任何服务器</span></div>'
   });
 }
 
