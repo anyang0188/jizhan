@@ -265,6 +265,8 @@ body {
 .header-btns {
   display: flex;
   gap: 4px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .btn-sample {
@@ -281,6 +283,14 @@ body {
 .btn-sample:hover {
   background: var(--primary);
   color: #fff;
+}
+
+/* 头部按钮组中的主按钮紧凑版 */
+.header-btns .btn-primary {
+  font-size: 12px;
+  padding: 3px 12px;
+  border-radius: 20px;
+  min-height: 26px;
 }
 
 .link-input {
@@ -303,10 +313,6 @@ body {
 }
 
 .input-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 
 .link-count {
   font-size: 13px;
