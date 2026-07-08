@@ -76,7 +76,7 @@
         <div class="bookmark-import-area">
           <button class="btn-bookmark-import" id="bookmarkImportBtn">📥 一键导入书签</button>
           <input type="file" id="bookmarkFileInput" accept=".html,.htm" style="display:none;">
-          <div class="bookmark-hint">受浏览器沙箱安全限制，普通网页无法直接读取浏览器内部书签数据库。本工具采用本地文件解析方案，上传的HTML文件仅在浏览器内存运算，不会上传任何数据至服务器，解析完毕内存数据自动清空，隐私安全性高于需要申请书签权限的网页脚本和浏览器扩展。</div>
+          <div class="bookmark-hint">📁 从 Chrome/Edge 导出书签 HTML 文件导入。所有解析均在本地完成，不上传服务器。</div>
         </div>
         <textarea class="link-input" id="linkInput"
           placeholder="https://github.com&#10;https://www.bilibili.com/ 哔哩哔哩（视频）&#10;https://chat.deepseek.com DeepSeek"
@@ -125,9 +125,9 @@
 
 
 
-<script src="js/classifier.js"></script>
-<script src="js/htmlGenerator.js"></script>
-<script src="js/linkChecker.js"></script>
-<script src="js/app.js"></script>
+<script src="js/classifier.js?v=20260708"></script>
+<script src="js/htmlGenerator.js?v=20260708"></script>
+<script src="js/linkChecker.js?v=20260708"></script>
+<script src="js/app.js?v=20260708"></script>
 </body>
 </html>

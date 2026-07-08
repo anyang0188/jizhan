@@ -146,7 +146,7 @@
       checkSingleUrl(url).then(function(status) {
         setCacheStatus(url, status);
         if (onProgress) {
-          onProgress(checkingQueue.length === 0 ? getTotalChecked() : getTotalChecked() - activeChecks, getTotalChecked());
+          onProgress(_totalExpected - checkingQueue.length - activeChecks, _totalExpected);
         }
         activeChecks--;
         processQueue();

@@ -418,7 +418,7 @@ function renderClassifiedData() {
       }
       html += '<div class="cat-site">';
       html += dotHtml;
-      html += '<span class="site-icon editable" data-act="editSiteIcon" data-cat="' + catIndex + '" data-site="' + siteIndex + '">' + site.icon + '</span>';
+      html += '<span class="site-icon editable" data-act="editSiteIcon" data-cat="' + catIndex + '" data-site="' + siteIndex + '">' + escapeHtml(site.icon) + '</span>';
       html += '<span class="site-name editable" data-act="editSiteName" data-cat="' + catIndex + '" data-site="' + siteIndex + '">' + escapeHtml(site.name) + '</span>';
       html += '<span class="site-action-btn" data-act="siteAction" data-cat="' + catIndex + '" data-site="' + siteIndex + '">&#8645;</span>';
       html += '</div>';
@@ -640,9 +640,6 @@ function startBatchCheck() {
  * 预校验（导入后自动调用，不阻塞UI，不显示进度条）
  */
 function startPreCheck(urls) {
-  var done = 0;
-  var total = urls.length;
-
   LinkChecker.checkUrls(urls, function() {}, function() {
     // 预校验完成，静默刷新分类预览（显示红绿点）
     if (state.hasParsed) {
@@ -1501,20 +1498,21 @@ function importBookmarks(file) {
     // 更新计数
     updateLinkCount();
     
-    // 清除临时数据
+    // 先保存值再清除临�?�数据
+    var linkCount = uniqueLinks.length;
+    var preCheckUrls = uniqueLinks.map(function(l) { return l.url; });
     allLinks = null;
     uniqueLinks = null;
     seenUrls = null;
     content = null;
     doc = null;
     
-    showToast('导入成功，共 ' + uniqueLinks.length + ' 个链接');
+    showToast('导入成功，共 ' + linkCount + ' 个链接');
     
     // 导入后自动预校验
     setTimeout(function() {
-      var urls = uniqueLinks.map(function(l) { return l.url; });
-      if (urls.length > 0) {
-        startPreCheck(urls);
+      if (preCheckUrls.length > 0) {
+        startPreCheck(preCheckUrls);
       }
     }, 500);
   };
@@ -1562,7 +1560,7 @@ function showGuide() {
       '<div class="section-title">✨ 主要功能</div>' +
       '<div class="feature-item"><span class="feature-icon">🔗</span><span class="feature-text">粘贴链接，自动解析网址和站点名称</span></div>' +
       '<div class="feature-item"><span class="feature-icon">📂</span><span class="feature-text">智能识别分类，自动归类AI工具、搜索引擎、资源网站</span></div>' +
-      '<div class="feature-item"><span class="feature-icon">🎨</span><span class="feature-text">6套精美背景主题 + 自定义取色器</span></div>' +
+      '<div class="feature-item"><span class="feature-icon">🎨</span><span class="feature-text">3套背景主题 + 自定义取色器</span></div>' +
       '<div class="feature-item"><span class="feature-icon">📄</span><span class="feature-text">一键导出完整静态HTML导航文件，永久离线可用</span></div>' +
 
       '<div class="section-title">📝 输入格式（三选一，一行一条）</div>' +
@@ -1574,7 +1572,7 @@ function showGuide() {
       '<div class="section-title">📥 批量导入浏览器全部收藏夹</div>' +
       '<div class="format-intro">适合一次性迁移几百条书签，不用一条条复制：</div>' +
       '<div class="guide-step"><span class="step-num">1️⃣</span><span class="step-text">电脑打开 Chrome/Edge，地址栏输入 chrome://bookmarks 或 edge://favorites/</span></div>' +
-      '<div class="guide-step"><span class="step-num">2️⃣</span><span class="step-text">右上角「异常管理选项」→ 导出书签，保存为HTML文件（所有浏览器通用标准格式）</span></div>' +
+      '<div class="guide-step"><span class="step-num">2️⃣</span><span class="step-text">右上角「⋮」菜单 → 导出书签，保存为HTML文件（所有浏览器通用标准格式）</span></div>' +
       '<div class="guide-step"><span class="step-num">3️⃣</span><span class="step-text">点击本站「📥 一键导入书签」按钮，上传导出的HTML文件，自动读取文件夹结构，一键生成分类+链接</span></div>' +
       '<div class="format-note">⚠️ 受浏览器沙箱安全限制，普通网页无法直接读取浏览器内部书签数据库。本工具采用本地文件解析方案，上传的HTML文件仅在浏览器内存运算，不会上传任何数据至服务器，解析完毕内存数据自动清空，隐私安全性高于需要申请书签权限的网页脚本和浏览器扩展。</div>' +
 
@@ -1715,7 +1713,6 @@ function init() {
     var ct = generateCustomTheme(customThemeColor);
     applyThemeCSS(ct.css);
   }
-  updateDarkModeClass();
   updatePreviewColors();
   if (restored) {
     renderClassifiedData();
@@ -1743,10 +1740,6 @@ if (document.readyState === 'loading') {
 
 
 // ===== 自定义取色器（动态DOM渲染，杜绝残留） =====
-var colorPickerState = { hue: 0, saturation: 50, lightness: 50 };
-var TRACK_HEIGHT = 200;
-var THUMB_HEIGHT = 24;
-var MAX_Y = TRACK_HEIGHT - THUMB_HEIGHT;
 
 // 页面初始化时强制清理残留弹窗
 (function cleanupOldPicker() {

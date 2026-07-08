@@ -61,14 +61,14 @@ function generateAppJS() {
         html += '<a href="' + escapeAttr(site.url) + '" target="_blank" class="nav-card" data-search-text="' +
           escapeAttr(site.name + ' ' + site.desc + ' ' + catLabel) + '">';
         html += '<div class="nav-card-icon">';
-        html += '<img src="https://www.google.com/s2/favicons?domain=' + escapeAttr(domain) + '&sz=64" alt="" class="nav-favicon" onerror="this.style.display=&quot;none&quot;" onload="this.src=&quot;&quot;" loading="lazy">';
-        html += '<span class="nav-fallback">' + siteIcon + '</span>';
+        html += '<img src="https://www.google.com/s2/favicons?domain=' + escapeAttr(domain) + '&sz=64" alt="" class="nav-favicon" onerror="this.style.display=&quot;none&quot;" loading="lazy">';
+        html += '<span class="nav-fallback">' + escapeHtml(siteIcon) + '</span>';
         html += '</div>';
         html += '<div class="nav-card-info">';
-        html += '<div class="nav-card-name">' + site.name + '</div>';
-        html += '<div class="nav-card-desc">' + site.desc + '</div>';
+        html += '<div class="nav-card-name">' + escapeHtml(site.name) + '</div>';
+        html += '<div class="nav-card-desc">' + escapeHtml(site.desc) + '</div>';
         html += '</div>';
-        if (site.tag) html += '<span class="nav-card-tag">' + site.tag + '</span>';
+        if (site.tag) html += '<span class="nav-card-tag">' + escapeHtml(site.tag) + '</span>';
         html += '</a>';
       });
       html += '</div></div>';
@@ -120,7 +120,13 @@ function generateAppJS() {
   }
 
   function escapeAttr(str) {
-    return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    if (!str) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
   init();

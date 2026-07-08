@@ -309,21 +309,6 @@ body {
   background: var(--primary-light);
 }
 
-/* GitHub Icon */
-.header-gh {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  color: var(--text-secondary);
-  transition: all var(--transition);
-}
-.header-gh:hover {
-  color: var(--text);
-  background: var(--bg);
-}
 
 /* Placeholder deeper color */
 .input-field::placeholder,
@@ -733,11 +718,7 @@ body {
   gap: 5px;
 }
 
-.check-filters {
-  display: flex;
-  gap: 5px;
-  flex-wrap: nowrap;
-}
+
 
 .check-row-bot {
   display: flex;
@@ -880,12 +861,6 @@ body {
   box-shadow: 0 0 4px rgba(156,163,175,0.4);
 }
 
-.cat-sites {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  padding-left: 21px;
-}
 
 .cat-site {
   display: inline-flex;
@@ -1814,27 +1789,7 @@ body {
   color: #d0d0d0;
 }
 
-/* 状态圆点深色适配 */
-.theme-dark-mode .status-dot {
-  border-color: #444;
-}
-
-.status-dot.status-ok {
-  background: #4ade80;
-  border-color: #4ade80;
-}
-
-.status-dot.status-fail {
-  background: #f87171;
-  border-color: #f87171;
-}
-
-.status-dot.status-unknown {
-  background: #6b7280;
-  border-color: #6b7280;
-}
-
-/* 链接健康检测进度条深色适配 */
+/* 链接健康检测进度条深色适�? */
 .theme-dark-mode .check-progress {
   background: #222222;
 }
