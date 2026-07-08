@@ -382,12 +382,13 @@ body {
 .link-input {
   width: 100%;
   height: 140px;
-  background: var(--bg);
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 10px;
   font-size: 13px;
   line-height: 1.6;
+  color: var(--text);
   font-family: inherit;
   resize: vertical;
   outline: none;
