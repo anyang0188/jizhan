@@ -274,7 +274,7 @@ function applyThemeCSS(cssObj) {
   var root = document.documentElement.style;
   for (var key in cssObj) {
     if (cssObj.hasOwnProperty(key)) {
-      root.setProperty('--' + key, cssObj[key]);
+      root.setProperty(key, cssObj[key]);
     }
   }
 }
@@ -1498,7 +1498,7 @@ function importBookmarks(file) {
     // 更新计数
     updateLinkCount();
     
-    // 先保存值再清除临�?�数据
+    // 先保存值再清除临时数据
     var linkCount = uniqueLinks.length;
     var preCheckUrls = uniqueLinks.map(function(l) { return l.url; });
     allLinks = null;
@@ -1715,10 +1715,8 @@ function init() {
   }
   updatePreviewColors();
   if (restored) {
-    renderClassifiedData();
-    // 页面恢复时，加载缓存
+    // 页面恢复时，加载缓存后渲染
     LinkChecker.checkUrls([], function() {}, function() {
-      // 缓存加载完成，重新渲染显示状态圆点
       renderClassifiedData();
     });
     // 如果缓存中没有当前页面的URL，自动触发预校验

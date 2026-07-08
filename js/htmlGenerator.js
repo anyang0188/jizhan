@@ -22,7 +22,7 @@ function generateDataJs(navData) {
 
 function quote(str) {
   if (!str) return "''";
-  return "'" + String(str).replace(/'/g, "\\'") + "'";
+  return "'" + String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/<\//g, '<\\/') + "'";
 }
 
 function escapeHtml(str) {
