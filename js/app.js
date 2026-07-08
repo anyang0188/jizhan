@@ -1277,8 +1277,10 @@ function generateSingleFile(siteTitle, siteSubtitle, themeColor, themeId) {
 '.logo-sub { font-size: 13px; opacity: 0.85; background: rgba(255,255,255,0.2); padding: 2px 10px; border-radius: 20px; margin-left: 4px; }\\n' +
 '.header-right { display: flex; align-items: center; }\\n' +
 '.deploy-wrapper { position: relative; }\\n' +
-'.deploy-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 8px 18px; border-radius: 14px; font-size: 13px; cursor: pointer; transition: all 0.2s; backdrop-filter: blur(4px); box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-width: 120px; text-align: center; line-height: 1.8; }\\n' +
-'.deploy-btn:hover { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.5); transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }\\n' +
+'.deploy-btn { background: #fff; border: 1px solid #ddd; color: #333; padding: 12px 22px; border-radius: 16px; font-size: 13px; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 3px 12px rgba(0,0,0,0.12); min-width: 130px; text-align: center; line-height: 2; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif; }\\n' +
+'.deploy-btn:hover { background: #e6f0ff; border-color: #3677e8; transform: scale(1.03); box-shadow: 0 5px 16px rgba(0,0,0,0.18); }\\n' +
+'.deploy-btn.copied { background: #edf9f2; border-color: #52c41a; color: #389e0d; }\\n' +
+'@media (max-width: 640px) { .deploy-btn { padding: 10px 14px; min-width: 100px; font-size: 12px; } }\\n' +
 '.search-bar { max-width: var(--max-width); margin: 24px auto 0; padding: 0 24px; }\n' +
 '.search-inner { background: var(--card-bg); border-radius: var(--radius); padding: 0 20px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow); border: 2px solid transparent; transition: all var(--transition); }\n' +
 '.search-inner:focus-within { border-color: var(--primary); box-shadow: var(--shadow-hover); }\n' +
@@ -1317,10 +1319,10 @@ function generateSingleFile(siteTitle, siteSubtitle, themeColor, themeId) {
 '<script>\n' + dataJs + '\n</script>\n' +
 '<script>\n' + appJs + '\n</script>\n' +
 '<script>\n' +
-'var btn=document.getElementById("deployBtn"),defaultText="🌐 生成在线版",hoverText="代部署导航站在线服务<br>永久分享链接，5元起<br>点击自动复制微信 anyang0188",copiedText="微信已复制",isHover=false,isCopied=false;\n' +
+'var btn=document.getElementById("deployBtn"),defaultText="🌐 生成在线版",hoverText="<strong style=\\"font-size:14px\\">代部署导航站在线服务</strong><br><span style=\\"color:#3677e8\\">永久分享链接，5元起</span><br><span style=\\"color:#3677e8\\">点击自动复制微信 anyang0188</span>",copiedText="✅ 微信已复制",isHover=false,isCopied=false;\n' +
 'btn.addEventListener("mouseenter",function(){if(!isCopied){isHover=true;btn.innerHTML=hoverText}});\n' +
 'btn.addEventListener("mouseleave",function(){isHover=false;if(!isCopied){btn.innerHTML=defaultText}});\n' +
-'btn.addEventListener("click",function(){if(navigator.clipboard){navigator.clipboard.writeText("anyang0188")}else{var t=document.createElement("textarea");t.value="anyang0188";document.body.appendChild(t);t.select();document.execCommand("copy");document.body.removeChild(t)}isCopied=true;btn.innerHTML=copiedText;setTimeout(function(){isCopied=false;btn.innerHTML=isHover?hoverText:defaultText},2000)});\n' +
+'btn.addEventListener("click",function(){if(navigator.clipboard){navigator.clipboard.writeText("anyang0188")}else{var t=document.createElement("textarea");t.value="anyang0188";document.body.appendChild(t);t.select();document.execCommand("copy");document.body.removeChild(t)}isCopied=true;btn.classList.add("copied");btn.innerHTML=copiedText;setTimeout(function(){isCopied=false;btn.classList.remove("copied");btn.innerHTML=isHover?hoverText:defaultText},2000)});\n' +
 '</script>\n' +
 '</body>\n</html>';
 }
