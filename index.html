@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>集站 - 链接变导航</title>
+<meta name="description" content="粘贴链接，一键生成精美导航站">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="theme-color" content="#4F6EF7">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="集站">
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- ===== Header ===== -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <button class="header-guide" id="guideBtn">
+          <span>📖</span> 使用说明
+        </button>
+        <a class="header-gh" href="https://github.com/anyang0188/jizhan" target="_blank" title="GitHub 开源">
+          <svg class="gh-icon" viewBox="0 0 16 16" width="22" height="22"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        </a>
+      </div>
+      <div class="header-brand">
+        <span class="brand-icon">⚡</span>
+        <span class="brand-name">集站</span>
+        <span class="brand-tag">链接变导航</span>
+      </div>
+      <div class="header-right"></div>
+    </div>
+  </header>
+
+  <!-- ===== Main Layout ===== -->
+  <main class="app-main">
+
+    <!-- ===== Left Panel: Input ===== -->
+    <section class="panel panel-input">
+
+      <!-- 名称+副标题 -->
+      <div class="input-row-double">
+        <div class="input-half">
+          <label class="input-label" for="siteTitle">导航站名称</label>
+          <input class="input-field" id="siteTitle" placeholder="输入导航站名称" value="我的导航站">
+        </div>
+        <div class="input-half">
+          <label class="input-label" for="siteSubtitle">副标题（可选）</label>
+          <input class="input-field" id="siteSubtitle" placeholder="给导航站加一句描述" value="">
+        </div>
+      </div>
+
+      <!-- 主题 -->
+      <div class="input-group input-group-theme">
+        <label class="input-label">背景主题</label>
+        <div class="theme-picker" id="themePicker"></div>
+      </div>
+
+      <!-- 链接输入 -->
+      <div class="input-card">
+        <div class="input-card-header">
+          <span class="input-card-title">📋 粘贴你的链接</span>
+          <div class="header-btns">
+            <button class="btn-sample" id="clearBtn">清空</button>
+            <button class="btn-sample btn-sample-highlight" id="sampleBtn">✨ 填入示例</button>
+            <button class="btn btn-primary" id="parseBtn">解析链接</button>
+          </div>
+        </div>
+        <!-- 书签导入 -->
+        <div class="bookmark-import-area">
+          <button class="btn-bookmark-import" id="bookmarkImportBtn">📥 一键导入书签</button>
+          <input type="file" id="bookmarkFileInput" accept=".html,.htm" style="display:none;">
+          <div class="bookmark-hint">📁 从 Chrome/Edge 导出书签 HTML 文件导入。所有解析均在本地完成，不上传服务器。</div>
+        </div>
+        <textarea class="link-input" id="linkInput"
+          placeholder="每行一个链接，支持 3 种格式：&#10;纯链接 → https://github.com&#10;链接+名称 → https://www.bilibili.com/ 哔哩哔哩&#10;链接+名称（分类） → https://chat.deepseek.com DeepSeek（AI对话）"
+        ></textarea>
+        <div class="input-footer">
+          <span class="link-count" id="linkCount">实时检测 URL…</span>
+        </div>
+        <div class="format-tip" id="formatTip">支持 3 种格式：纯链接 / 链接+中文名 / 链接+名（分类）</div>
+      </div>
+
+    </section>
+
+    <!-- ===== Right Panel: Results ===== -->
+    <section class="panel panel-results">
+
+      <!-- 空状态 -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">🔗</div>
+        <h3 class="empty-title">还没开始呢</h3>
+        <p class="empty-desc">左边粘贴链接，或点「填入示例」快速体验效果</p>
+        <div id="restoreSessionArea"></div>
+      </div>
+
+      <!-- 分类预览 -->
+      <div class="results-card" id="previewCard" style="display:none;">
+        <div class="results-header">
+          <h2 class="results-title" id="previewTitle">📊 分类结果</h2>
+          <div class="results-header-right">
+            <span class="results-badge" id="previewHint"></span>
+            <div class="results-header-actions">
+              <button class="btn btn-reset" id="resetBtn">🔄 重新开始</button>
+              <button class="btn btn-export" id="exportBtn">📥 生成链页</button>
+            </div>
+          </div>
+        </div>
+        <div id="checkToolbar"></div>
+        <div class="category-list" id="categoryList"></div>
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+<!-- 弹窗容器 -->
+<div id="modalContainer"></div>
+
+
+
+<script src="js/classifier.js?v=20260708"></script>
+<script src="js/htmlGenerator.js?v=20260708"></script>
+<script src="js/linkChecker.js?v=20260708"></script>
+<script src="js/app.js?v=20260708"></script>
+<script>
+// Service Worker 注册（PWA 离线支持）
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(function(e) {
+    console.log('SW registration failed:', e);
+  });
+}
+</script>
+</body>
+</html>
