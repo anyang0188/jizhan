@@ -1359,17 +1359,66 @@ function showExportSuccess(html) {
 }
 
 function downloadHTML(html) {
-  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
   var siteTitle = $('siteTitle').value || 'nav-site';
-  a.download = siteTitle.replace(/[^\w\u4e00-\u9fa5]/g, '_') + '.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  showToast('文件已下载', 'success');
+  var filename = siteTitle.replace(/[^\w\u4e00-\u9fa5]/g, '_') + '.html';
+
+  // iOS Safari / Chrome Android: Web Share API 分享文件
+  if (navigator.share && navigator.canShare) {
+    var file = new File([html], filename, { type: 'text/html;charset=utf-8' });
+    if (navigator.canShare({ files: [file] })) {
+      navigator.share({
+        files: [file],
+        title: siteTitle,
+        text: siteTitle + ' 导航站'
+      }).then(function() {
+        showToast('文件已分享，可保存到「文件」App', 'success');
+        closeModal();
+      }).catch(function(err) {
+        if (err.name !== 'AbortError') {
+          fallbackDownload(html, filename);
+        }
+      });
+      return;
+    }
+  }
+
+  // 桌面浏览器: <a download> + Blob
+  fallbackDownload(html, filename);
+}
+
+function fallbackDownload(html, filename) {
+  try {
+    var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('文件已下载', 'success');
+    closeModal();
+  } catch(e) {
+    // iOS Safari / file:// — 新窗口打开
+    try {
+      var newWin = window.open('', '_blank');
+      if (newWin) {
+        newWin.document.write(html);
+        newWin.document.close();
+        showToast('已打开新页面，用分享菜单保存', 'success');
+        closeModal();
+      } else {
+        document.open();
+        document.write(html);
+        document.close();
+        showToast('导航站已打开，用浏览器菜单保存', 'success');
+        closeModal();
+      }
+    } catch(e2) {
+      showToast('导出失败，请尝试「复制代码」按钮', 'error');
+    }
+  }
 }
 
 function copyToClipboard(text) {

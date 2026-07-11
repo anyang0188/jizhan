@@ -11,6 +11,11 @@
 <meta name="theme-color" content="#4F6EF7">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="集站">
 <link rel="stylesheet" href="css/style.css">
 
 </head>
@@ -130,5 +135,13 @@
 <script src="js/htmlGenerator.js?v=20260708"></script>
 <script src="js/linkChecker.js?v=20260708"></script>
 <script src="js/app.js?v=20260708"></script>
+<script>
+// Service Worker 注册（PWA 离线支持）
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(function(e) {
+    console.log('SW registration failed:', e);
+  });
+}
+</script>
 </body>
 </html>

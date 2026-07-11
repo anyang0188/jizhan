@@ -1,0 +1,5 @@
+# WorkBuddy project files
+.workbuddy/
+*.py
+__pycache__/
+*.pyc
