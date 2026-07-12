@@ -1267,6 +1267,7 @@ function generateSingleFile(siteTitle, siteSubtitle, themeColor, themeId) {
 '  background: var(--bg);\n' +
 '  color: var(--text);\n' +
 '  line-height: 1.6;\n' +
+'  min-height: 100vh;\n' +
 '  min-height: 100dvh;\n' +
 '}\n' +
 '.header { background: var(--header-bg, linear-gradient(135deg, var(--primary) 0%, ' + hexToRgba(themeColor, 0.75) + ' 100%)); color: var(--header-text, #fff); padding: 24px 0 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 16px ' + hexToRgba(themeColor, 0.25) + '; }\n' +
